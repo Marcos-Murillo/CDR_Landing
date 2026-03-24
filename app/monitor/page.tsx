@@ -52,8 +52,8 @@ const ALL_MODULES = [
 ]
 
 const SSO_REDIRECT: Record<string, string> = {
-  bitacoraac: '/admin',
-  bitacora_comunicaciones: '/admin',
+  bitacoraac: '/',
+  bitacora_comunicaciones: '/',
   cducontrol: '/admin',
   inventario_cultura: '/',
   inventario_deporte: '/',
