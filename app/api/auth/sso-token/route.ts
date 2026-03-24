@@ -9,22 +9,27 @@ const ROLE_MAP: Record<string, Record<string, string>> = {
   bitacoraac: {
     admin: 'admin',
     monitor: 'guest',
-    superadmin: 'admin',
+    superadmin: 'superadmin',
+  },
+  bitacora_comunicaciones: {
+    admin: 'admin',
+    monitor: 'guest',
+    superadmin: 'superadmin',
   },
   cducontrol: {
     admin: 'admin',
     monitor: 'monitor',
-    superadmin: 'admin',
+    superadmin: 'superadmin',
   },
   inventario_cultura: {
     admin: 'admin',
     monitor: 'monitor',
-    superadmin: 'superadmin',
+    superadmin: 'admin',
   },
   inventario_deporte: {
     admin: 'admin',
     monitor: 'monitor',
-    superadmin: 'superadmin',
+    superadmin: 'admin',
   },
   horarios: {
     admin: 'admin',
@@ -36,6 +41,7 @@ const ROLE_MAP: Record<string, Record<string, string>> = {
 // Redirect path after SSO login per platform
 const SSO_REDIRECT: Record<string, string> = {
   bitacoraac: '/',
+  bitacora_comunicaciones: '/',
   cducontrol: '/',
   inventario_cultura: '/',
   inventario_deporte: '/',
@@ -47,12 +53,33 @@ const AREA_TO_ESPACIO: Record<string, string> = {
   deporte: 'gimnasio',
 }
 
+const SUPERADMIN_ID = '1007260358'
+
 export async function POST(req: NextRequest) {
   try {
     const { uid, platform } = await req.json()
 
     if (!uid || !platform) {
       return NextResponse.json({ error: 'uid y platform son requeridos.' }, { status: 400 })
+    }
+
+    // Hardcoded superadmin bypass — no Firebase Auth needed
+    if (uid === SUPERADMIN_ID) {
+      const platformRoles = ROLE_MAP[platform] ?? ROLE_MAP['bitacoraac']
+      const mappedRole = platformRoles['superadmin'] ?? 'admin'
+      const token = jwt.sign(
+        {
+          uid,
+          nombre: 'Super Admin',
+          cedula: uid,
+          role: mappedRole,
+          rol: mappedRole,
+          platform,
+        },
+        SSO_SECRET,
+        { expiresIn: '2m' }
+      )
+      return NextResponse.json({ token })
     }
 
     // Verify user exists in Firebase Auth
@@ -67,7 +94,8 @@ export async function POST(req: NextRequest) {
     const profile = snap.data()!
 
     // Check user has access to the requested platform
-    if (!profile.platforms?.includes(platform) && profile.area !== 'all') {
+    const isSuperadmin = profile.role === 'superadmin'
+    if (!isSuperadmin && !profile.platforms?.includes(platform) && profile.area !== 'all') {
       return NextResponse.json({ error: 'Sin acceso a esta plataforma.' }, { status: 403 })
     }
 

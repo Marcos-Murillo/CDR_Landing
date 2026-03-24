@@ -18,6 +18,14 @@ const ALL_MODULES = [
     sso: true,
   },
   {
+    id: 'bitacora_comunicaciones',
+    name: 'Bitácora COM',
+    description: 'Comunicaciones',
+    area: 'cultura',
+    url: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES ?? '#',
+    sso: true,
+  },
+  {
     id: 'inventario_cultura',
     name: 'Inventario Cultura',
     description: 'Gestión de recursos',
@@ -31,7 +39,7 @@ const ALL_MODULES = [
     description: 'Programación',
     area: 'cultura',
     url: process.env.NEXT_PUBLIC_URL_HORARIOS ?? '#',
-    sso: false,
+    sso: true,
   },
   {
     id: 'cducontrol',
@@ -45,6 +53,7 @@ const ALL_MODULES = [
 
 const SSO_REDIRECT: Record<string, string> = {
   bitacoraac: '/admin',
+  bitacora_comunicaciones: '/admin',
   cducontrol: '/admin',
   inventario_cultura: '/',
   inventario_deporte: '/',

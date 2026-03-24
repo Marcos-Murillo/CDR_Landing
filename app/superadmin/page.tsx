@@ -5,10 +5,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
+import { useAuth } from '@/hoocks/use-auth'
 import styles from './superadmin.module.css'
 
 const PLATFORMS = [
   { id: 'bitacoraac', name: 'Bitácora AC', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_BITACORA' },
+  { id: 'bitacora_comunicaciones', name: 'Bitácora COM', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES' },
   { id: 'inventario_cultura', name: 'Inventario', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_INVENTARIO_CULTURA' },
   { id: 'horarios', name: 'Horarios', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_HORARIOS' },
   { id: 'estadisticas', name: 'Estadísticas', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_ESTADISTICAS' },
@@ -19,6 +21,7 @@ const PLATFORMS = [
   ...p,
   available: !!({
     NEXT_PUBLIC_URL_BITACORA: process.env.NEXT_PUBLIC_URL_BITACORA,
+    NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES,
     NEXT_PUBLIC_URL_INVENTARIO_CULTURA: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA,
     NEXT_PUBLIC_URL_HORARIOS: process.env.NEXT_PUBLIC_URL_HORARIOS,
     NEXT_PUBLIC_URL_ESTADISTICAS: process.env.NEXT_PUBLIC_URL_ESTADISTICAS,
@@ -122,6 +125,47 @@ export default function SuperAdminPage() {
   const [showForm, setShowForm] = useState(false)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+
+  const PLATFORM_URLS: Record<string, string> = {
+    bitacoraac: process.env.NEXT_PUBLIC_URL_BITACORA ?? '',
+    bitacora_comunicaciones: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES ?? '',
+    inventario_cultura: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA ?? '',
+    horarios: process.env.NEXT_PUBLIC_URL_HORARIOS ?? '',
+    cducontrol: process.env.NEXT_PUBLIC_URL_CDU ?? '',
+    inventario_deporte: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE ?? '',
+  }
+
+  const SSO_REDIRECT: Record<string, string> = {
+    bitacoraac: '/superadmin',
+    bitacora_comunicaciones: '/superadmin',
+    inventario_cultura: '/',
+    horarios: '/adofi',
+    cducontrol: '/superadmin',
+    inventario_deporte: '/',
+  }
+
+  const handleOpenPlatform = async (platformId: string) => {
+    const url = PLATFORM_URLS[platformId]
+    if (!url) return
+    // Superadmin usa ID hardcodeado — no tiene Firebase Auth session
+    const uid = auth.currentUser?.uid ?? '1007260358'
+    try {
+      const res = await fetch('/api/auth/sso-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid, platform: platformId }),
+      })
+      const data = await res.json()
+      if (res.ok && data.token) {
+        const redirect = SSO_REDIRECT[platformId] ?? '/'
+        window.open(`${url}/auth/sso?token=${data.token}&redirect=${redirect}`, '_blank')
+      } else {
+        window.open(url, '_blank')
+      }
+    } catch {
+      window.open(url, '_blank')
+    }
+  }
 
   // Create form state
   const [displayName, setDisplayName] = useState('')
@@ -321,6 +365,23 @@ export default function SuperAdminPage() {
               <PlusIcon />
               <span>Nuevo usuario</span>
             </button>
+          </div>
+
+          {/* Acceso rápido a plataformas */}
+          <div className={styles.platformsSection}>
+            <h2 className={styles.sectionTitle}>Acceso a plataformas</h2>
+            <div className={styles.platformsGrid}>
+              {PLATFORMS.filter(p => p.available).map(p => (
+                <button
+                  key={p.id}
+                  className={styles.platformCard}
+                  onClick={() => handleOpenPlatform(p.id)}
+                >
+                  <span className={styles.platformCardName}>{p.name}</span>
+                  <span className={styles.platformCardArea}>{p.area}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           {success && (

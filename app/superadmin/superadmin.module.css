@@ -652,3 +652,52 @@
   max-height: 90vh;
   overflow-y: auto;
 }
+
+/* ── Platform access section ─────────────────────────────────────────────── */
+.platformsSection {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, #6b7280);
+  margin-bottom: 0.75rem;
+}
+
+.platformsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.platformCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.6rem 1rem;
+  background: var(--surface, #f9fafb);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.platformCard:hover {
+  background: var(--surface-hover, #f0f4ff);
+  border-color: var(--accent, #6366f1);
+}
+
+.platformCardName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text, #111827);
+}
+
+.platformCardArea {
+  font-size: 0.7rem;
+  color: var(--text-muted, #6b7280);
+}

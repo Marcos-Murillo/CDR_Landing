@@ -240,7 +240,7 @@ export default function LandingPage() {
           <Link href="/" className={styles.logo}>
             <HexagonIcon />
             <div className={styles.logoText}>
-              <span className={styles.logoName}>RCD Digital</span>
+              <span className={styles.logoName}>CDR</span>
               <span className={styles.logoTag}>Universidad del Valle</span>
             </div>
           </Link>

@@ -18,6 +18,14 @@ const ALL_MODULES = [
     icon: 'clipboard',
   },
   {
+    id: 'bitacora_comunicaciones',
+    name: 'Bitácora COM',
+    description: 'Registro y seguimiento de actividades de comunicaciones.',
+    area: 'cultura',
+    url: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES || '#',
+    icon: 'clipboard',
+  },
+  {
     id: 'inventario_cultura',
     name: 'Inventario',
     description: 'Gestión de recursos, instrumentos y materiales de la sección.',
@@ -128,6 +136,7 @@ export default function DashboardPage() {
     // Platforms with SSO support and their landing page after login
     const SSO_PLATFORMS: Record<string, string> = {
       bitacoraac: '/admin',
+      bitacora_comunicaciones: '/admin',
       cducontrol: '/admin',
       inventario_cultura: '/',
       inventario_deporte: '/',
