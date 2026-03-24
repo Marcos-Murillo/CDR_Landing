@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import * as admin from 'firebase-admin'
+import { FieldValue } from 'firebase-admin/firestore'
 import { adminAuth, adminDb } from '@/lib/firebase-admin'
 
 export async function POST(req: NextRequest) {
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       role,
       area,
       platforms,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: FieldValue.serverTimestamp(),
       createdBy: 'superadmin',
     })
 
