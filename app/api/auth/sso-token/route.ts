@@ -36,6 +36,14 @@ const ROLE_MAP: Record<string, Record<string, string>> = {
     monitor: 'monitor',
     superadmin: 'admin',
   },
+  asistencias_cultura: {
+    admin: 'ADMIN',
+    superadmin: 'SUPER_ADMIN',
+  },
+  asistencias_deporte: {
+    admin: 'ADMIN',
+    superadmin: 'SUPER_ADMIN',
+  },
 }
 
 // Redirect path after SSO login per platform
@@ -74,6 +82,7 @@ export async function POST(req: NextRequest) {
           cedula: uid,
           role: mappedRole,
           rol: mappedRole,
+          area: 'all',
           platform,
         },
         SSO_SECRET,
@@ -115,6 +124,7 @@ export async function POST(req: NextRequest) {
         cedula: profile.cedula ?? uid,
         role: mappedRole,   // used by bitacoraac
         rol: mappedRole,    // used by gym_cdu
+        area: profile.area ?? 'cultura',
         espacio,
         platform,
       },

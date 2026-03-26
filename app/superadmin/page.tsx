@@ -16,6 +16,8 @@ const PLATFORMS = [
   { id: 'estadisticas', name: 'Estadísticas', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_ESTADISTICAS' },
   { id: 'cducontrol', name: 'CDUControl', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_CDU' },
   { id: 'inventario_deporte', name: 'Inventario', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_INVENTARIO_DEPORTE' },
+  { id: 'asistencias_cultura', name: 'Asistencias', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
+  { id: 'asistencias_deporte', name: 'Asistencias', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
   { id: 'multiarea', name: 'Multi-Área', area: 'Transversal', envKey: 'NEXT_PUBLIC_URL_MULTIAREA' },
 ].map((p) => ({
   ...p,
@@ -133,6 +135,8 @@ export default function SuperAdminPage() {
     horarios: process.env.NEXT_PUBLIC_URL_HORARIOS ?? '',
     cducontrol: process.env.NEXT_PUBLIC_URL_CDU ?? '',
     inventario_deporte: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE ?? '',
+    asistencias_cultura: process.env.NEXT_PUBLIC_URL_ASISTENCIAS ?? '',
+    asistencias_deporte: process.env.NEXT_PUBLIC_URL_ASISTENCIAS ?? '',
   }
 
   const SSO_REDIRECT: Record<string, string> = {
@@ -142,6 +146,8 @@ export default function SuperAdminPage() {
     horarios: '/adofi',
     cducontrol: '/superadmin',
     inventario_deporte: '/',
+    asistencias_cultura: '/usuarios',
+    asistencias_deporte: '/usuarios',
   }
 
   const handleOpenPlatform = async (platformId: string) => {

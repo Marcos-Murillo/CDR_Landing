@@ -73,6 +73,22 @@ const ALL_MODULES = [
     url: process.env.NEXT_PUBLIC_URL_MULTIAREA || '#',
     icon: 'grid',
   },
+  {
+    id: 'asistencias_cultura',
+    name: 'Asistencias Cultura',
+    description: 'Gestión de asistencias, grupos y estadísticas culturales.',
+    area: 'cultura',
+    url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || '#',
+    icon: 'chart',
+  },
+  {
+    id: 'asistencias_deporte',
+    name: 'Asistencias Deporte',
+    description: 'Gestión de asistencias, grupos y estadísticas deportivas.',
+    area: 'deporte',
+    url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || '#',
+    icon: 'trophy',
+  },
 ]
 
 function HexagonIcon() {
@@ -141,6 +157,8 @@ export default function DashboardPage() {
       inventario_cultura: '/',
       inventario_deporte: '/',
       horarios: '/adofi',
+      asistencias_cultura: '/usuarios',
+      asistencias_deporte: '/usuarios',
     }
 
     if (module.id in SSO_PLATFORMS && module.url !== '#') {
