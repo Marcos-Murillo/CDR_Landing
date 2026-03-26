@@ -78,7 +78,7 @@ const ALL_MODULES = [
     name: 'Asistencias Cultura',
     description: 'Gestión de asistencias, grupos y estadísticas culturales.',
     area: 'cultura',
-    url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || '#',
+    url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
     icon: 'chart',
   },
   {
@@ -86,7 +86,7 @@ const ALL_MODULES = [
     name: 'Asistencias Deporte',
     description: 'Gestión de asistencias, grupos y estadísticas deportivas.',
     area: 'deporte',
-    url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || '#',
+    url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
     icon: 'trophy',
   },
 ]

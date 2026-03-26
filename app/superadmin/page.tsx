@@ -30,7 +30,8 @@ const PLATFORMS = [
     NEXT_PUBLIC_URL_CDU: process.env.NEXT_PUBLIC_URL_CDU,
     NEXT_PUBLIC_URL_INVENTARIO_DEPORTE: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE,
     NEXT_PUBLIC_URL_MULTIAREA: process.env.NEXT_PUBLIC_URL_MULTIAREA,
-    NEXT_PUBLIC_URL_ASISTENCIAS: process.env.NEXT_PUBLIC_URL_ASISTENCIAS,
+    // Asistencias always available — hardcoded fallback
+    NEXT_PUBLIC_URL_ASISTENCIAS: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
   } as Record<string, string | undefined>)[p.envKey],
 }))
 
@@ -136,8 +137,8 @@ export default function SuperAdminPage() {
     horarios: process.env.NEXT_PUBLIC_URL_HORARIOS ?? '',
     cducontrol: process.env.NEXT_PUBLIC_URL_CDU ?? '',
     inventario_deporte: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE ?? '',
-    asistencias_cultura: process.env.NEXT_PUBLIC_URL_ASISTENCIAS ?? '',
-    asistencias_deporte: process.env.NEXT_PUBLIC_URL_ASISTENCIAS ?? '',
+    asistencias_cultura: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
+    asistencias_deporte: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
   }
 
   const SSO_REDIRECT: Record<string, string> = {
