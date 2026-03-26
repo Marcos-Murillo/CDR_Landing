@@ -157,8 +157,8 @@ export default function DashboardPage() {
       inventario_cultura: '/',
       inventario_deporte: '/',
       horarios: '/adofi',
-      asistencias_cultura: '/usuarios',
-      asistencias_deporte: '/usuarios',
+      asistencias_cultura: user.role === 'superadmin' ? '/super-admin' : '/usuarios',
+      asistencias_deporte: user.role === 'superadmin' ? '/super-admin' : '/usuarios',
     }
 
     if (module.id in SSO_PLATFORMS && module.url !== '#') {
@@ -187,7 +187,15 @@ export default function DashboardPage() {
   }
 
   // Filter modules by user's assigned platforms
-  const availableModules = ALL_MODULES.filter((m) => user.platforms.includes(m.id))
+  // Asistencias cards are shown automatically based on area (no platform assignment needed)
+  const ASISTENCIAS_IDS = ['asistencias_cultura', 'asistencias_deporte']
+  const availableModules = ALL_MODULES.filter((m) => {
+    if (ASISTENCIAS_IDS.includes(m.id)) {
+      if (user.area === 'all') return true
+      return m.id === `asistencias_${user.area}`
+    }
+    return user.platforms.includes(m.id)
+  })
 
   const getAreaLabel = (a: string) => ({ cultura: 'Cultura', deporte: 'Deporte', all: 'Multi-área' }[a] ?? a)
   const getRoleLabel = (r: string) => ({ admin: 'Administrador', monitor: 'Monitor', superadmin: 'Super Admin' }[r] ?? r)

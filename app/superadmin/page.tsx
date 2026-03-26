@@ -30,6 +30,7 @@ const PLATFORMS = [
     NEXT_PUBLIC_URL_CDU: process.env.NEXT_PUBLIC_URL_CDU,
     NEXT_PUBLIC_URL_INVENTARIO_DEPORTE: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE,
     NEXT_PUBLIC_URL_MULTIAREA: process.env.NEXT_PUBLIC_URL_MULTIAREA,
+    NEXT_PUBLIC_URL_ASISTENCIAS: process.env.NEXT_PUBLIC_URL_ASISTENCIAS,
   } as Record<string, string | undefined>)[p.envKey],
 }))
 
@@ -146,8 +147,8 @@ export default function SuperAdminPage() {
     horarios: '/adofi',
     cducontrol: '/superadmin',
     inventario_deporte: '/',
-    asistencias_cultura: '/usuarios',
-    asistencias_deporte: '/usuarios',
+    asistencias_cultura: '/super-admin',
+    asistencias_deporte: '/super-admin',
   }
 
   const handleOpenPlatform = async (platformId: string) => {
