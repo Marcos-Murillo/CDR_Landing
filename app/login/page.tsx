@@ -14,12 +14,14 @@ import type { UserRole } from '@/hoocks/use-auth'
 import styles from './login.module.css'
 
 const MODULES = [
-  { name: 'Bitácora', area: 'Cultura' },
-  { name: 'Inventario', area: 'Cultura' },
-  { name: 'Horarios', area: 'Cultura' },
-  { name: 'Estadísticas', area: 'Cultura' },
-  { name: 'CDUControl', area: 'Deporte' },
-  { name: 'Multi-Área', area: 'Transversal' },
+  { name: 'Bitácora AC', area: 'Cultura' },
+  { name: 'Bitácora COM', area: 'Cultura' },
+  { name: 'Stock Cultura', area: 'Cultura' },
+  { name: 'Horarios Cultura', area: 'Cultura' },
+  { name: 'Asistencias', area: 'Multi-área' },
+  { name: 'Stock CDU', area: 'Deporte' },
+  { name: 'Horarios CDU', area: 'Deporte' },
+  { name: 'GymControl CDU', area: 'Deporte' },
 ]
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -197,7 +199,7 @@ export default function LoginPage() {
             <div className={styles.brandLogo}>
               <HexagonIcon />
               <div className={styles.brandText}>
-                <span className={styles.brandName}>RCD Digital</span>
+                <span className={styles.brandName}>CRD Digital</span>
                 <span className={styles.brandTag}>Universidad del Valle</span>
               </div>
             </div>
@@ -205,10 +207,10 @@ export default function LoginPage() {
 
           <div className={styles.brandMain}>
             <h1 className={styles.brandTitle}>
-              Gestión digital para <em>Recreación, Cultura y Deporte</em>
+              Gestión digital para <em>Cultura, Recreación y Deporte</em>
             </h1>
             <p className={styles.brandDescription}>
-              Accede a todas las herramientas del ecosistema RCD desde un solo lugar.
+              Accede a todas las herramientas del ecosistema CRD desde un solo lugar.
             </p>
           </div>
 
@@ -222,7 +224,7 @@ export default function LoginPage() {
           </div>
 
           <div className={styles.leftFooter}>
-            <span>© 2024 Sección RCD — Universidad del Valle</span>
+            <span>© 2026 Sección CRD — Universidad del Valle</span>
           </div>
         </div>
         <div className={styles.decorativeCircles}>

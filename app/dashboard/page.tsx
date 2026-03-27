@@ -12,7 +12,7 @@ const ALL_MODULES = [
   {
     id: 'bitacoraac',
     name: 'Bitácora AC',
-    description: 'Control de asistencia y seguimiento de actividades culturales.',
+    description: 'Registro de actividades, seguimiento de tareas y control de asistencia de monitores del área cultural.',
     area: 'cultura',
     url: process.env.NEXT_PUBLIC_URL_BITACORA || '#',
     icon: 'clipboard',
@@ -20,63 +20,55 @@ const ALL_MODULES = [
   {
     id: 'bitacora_comunicaciones',
     name: 'Bitácora COM',
-    description: 'Registro y seguimiento de actividades de comunicaciones.',
+    description: 'Registro y seguimiento de actividades del área de comunicaciones de la sección.',
     area: 'cultura',
     url: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES || '#',
     icon: 'clipboard',
   },
   {
-    id: 'inventario_cultura',
-    name: 'Inventario',
-    description: 'Gestión de recursos, instrumentos y materiales de la sección.',
+    id: 'stock_cultura',
+    name: 'Stock Cultura',
+    description: 'Gestión de inventario de instrumentos, materiales y recursos del área cultural.',
     area: 'cultura',
     url: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA || '#',
     icon: 'box',
   },
   {
     id: 'horarios',
-    name: 'Horarios',
-    description: 'Programación de espacios, grupos y actividades culturales.',
+    name: 'Horarios Cultura',
+    description: 'Consulta pública de horarios de grupos culturales: danza, música, teatro y más.',
     area: 'cultura',
     url: process.env.NEXT_PUBLIC_URL_HORARIOS || '#',
     icon: 'calendar',
   },
   {
-    id: 'estadisticas',
-    name: 'Estadísticas',
-    description: 'Visualización de datos, métricas e informes institucionales.',
-    area: 'cultura',
-    url: process.env.NEXT_PUBLIC_URL_ESTADISTICAS || '#',
-    icon: 'chart',
-  },
-  {
-    id: 'cducontrol',
-    name: 'CDUControl',
-    description: 'Sistema integral para la gestión del Centro Deportivo.',
+    id: 'stock_cdu',
+    name: 'Stock CDU',
+    description: 'Inventario deportivo con registro de usuarios, préstamos de equipos y reportes del Centro Deportivo.',
     area: 'deporte',
     url: process.env.NEXT_PUBLIC_URL_CDU || '#',
-    icon: 'trophy',
-  },
-  {
-    id: 'inventario_deporte',
-    name: 'Inventario',
-    description: 'Gestión de recursos y materiales deportivos.',
-    area: 'deporte',
-    url: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE || '#',
     icon: 'box',
   },
   {
-    id: 'multiarea',
-    name: 'Multi-Área',
-    description: 'Herramientas compartidas entre cultura y deporte.',
-    area: 'all',
-    url: process.env.NEXT_PUBLIC_URL_MULTIAREA || '#',
-    icon: 'grid',
+    id: 'horarios_cdu',
+    name: 'Horarios CDU',
+    description: 'Consulta de horarios de grupos y disciplinas deportivas del Centro Deportivo Universitario.',
+    area: 'deporte',
+    url: process.env.NEXT_PUBLIC_URL_HORARIOS_CDU || '#',
+    icon: 'calendar',
+  },
+  {
+    id: 'gym_cdu',
+    name: 'GymControl CDU',
+    description: 'Registro y control de acceso a las instalaciones del gimnasio del Centro Deportivo.',
+    area: 'deporte',
+    url: process.env.NEXT_PUBLIC_URL_GYM_CDU || '#',
+    icon: 'trophy',
   },
   {
     id: 'asistencias_cultura',
     name: 'Asistencias Cultura',
-    description: 'Gestión de asistencias, grupos y estadísticas culturales.',
+    description: 'Inscripciones, asistencia con QR, estadísticas y reportes del área cultural.',
     area: 'cultura',
     url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
     icon: 'chart',
@@ -84,10 +76,10 @@ const ALL_MODULES = [
   {
     id: 'asistencias_deporte',
     name: 'Asistencias Deporte',
-    description: 'Gestión de asistencias, grupos y estadísticas deportivas.',
+    description: 'Inscripciones, asistencia con QR, estadísticas y reportes del área deportiva.',
     area: 'deporte',
     url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
-    icon: 'trophy',
+    icon: 'chart',
   },
 ]
 
@@ -153,10 +145,11 @@ export default function DashboardPage() {
     const SSO_PLATFORMS: Record<string, string> = {
       bitacoraac: '/admin',
       bitacora_comunicaciones: '/admin',
-      cducontrol: '/admin',
-      inventario_cultura: '/',
-      inventario_deporte: '/',
+      stock_cdu: '/admin',
+      stock_cultura: '/',
       horarios: '/adofi',
+      horarios_cdu: '/',
+      gym_cdu: '/',
       asistencias_cultura: user.role === 'superadmin' ? '/super-admin' : '/usuarios',
       asistencias_deporte: user.role === 'superadmin' ? '/super-admin' : '/usuarios',
     }
@@ -187,7 +180,6 @@ export default function DashboardPage() {
   }
 
   // Filter modules by user's assigned platforms
-  // Asistencias cards are shown automatically based on area (no platform assignment needed)
   const ASISTENCIAS_IDS = ['asistencias_cultura', 'asistencias_deporte']
   const availableModules = ALL_MODULES.filter((m) => {
     if (ASISTENCIAS_IDS.includes(m.id)) {
@@ -208,7 +200,7 @@ export default function DashboardPage() {
           <Link href="/" className={styles.logo}>
             <HexagonIcon />
             <div className={styles.logoText}>
-              <span className={styles.logoName}>RCD Digital</span>
+              <span className={styles.logoName}>CRD Digital</span>
               <span className={styles.logoTag}>Universidad del Valle</span>
             </div>
           </Link>
@@ -277,7 +269,7 @@ export default function DashboardPage() {
 
       <footer className={styles.footer}>
         <div className={styles.footerContent}>
-          <span>© 2024 Sección RCD — Universidad del Valle</span>
+          <span>© 2026 Sección CRD — Universidad del Valle</span>
           <span className={styles.footerVersion}>v1.0.0</span>
         </div>
       </footer>

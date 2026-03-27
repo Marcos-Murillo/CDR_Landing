@@ -6,46 +6,60 @@ import styles from './page.module.css'
 
 const PLATFORMS = [
   {
-    id: 'bitacora',
-    name: 'Bitácora',
-    description: 'Control de asistencia y seguimiento de actividades culturales en tiempo real.',
+    id: 'bitacoraac',
+    name: 'Bitácora AC',
+    description: 'Registro de actividades, seguimiento de tareas y control de asistencia de monitores del área de cultura.',
     area: 'cultura',
-    tags: ['Asistencia', 'Seguimiento', 'Reportes'],
+    tags: ['Actividades', 'Asistencia', 'Monitores'],
   },
   {
-    id: 'inventario',
-    name: 'Inventario',
-    description: 'Gestión completa de recursos, instrumentos y materiales de la sección.',
+    id: 'bitacora_comunicaciones',
+    name: 'Bitácora COM',
+    description: 'Registro y seguimiento de actividades del área de comunicaciones de la sección.',
     area: 'cultura',
-    tags: ['Recursos', 'Control', 'Préstamos'],
+    tags: ['Comunicaciones', 'Registros', 'Seguimiento'],
+  },
+  {
+    id: 'stock_cultura',
+    name: 'Stock Cultura',
+    description: 'Gestión de inventario de instrumentos, materiales y recursos del área cultural.',
+    area: 'cultura',
+    tags: ['Inventario', 'Instrumentos', 'Recursos'],
   },
   {
     id: 'horarios',
-    name: 'Horarios',
-    description: 'Programación y coordinación de espacios, grupos y actividades culturales.',
+    name: 'Horarios Cultura',
+    description: 'Consulta pública de horarios de grupos culturales: danza, música, teatro y más.',
     area: 'cultura',
-    tags: ['Programación', 'Espacios', 'Grupos'],
+    tags: ['Horarios', 'Grupos', 'Espacios'],
   },
   {
-    id: 'estadisticas',
-    name: 'Estadísticas',
-    description: 'Visualización de datos, métricas de impacto y reportes institucionales.',
-    area: 'cultura',
-    tags: ['Métricas', 'Reportes', 'Datos'],
-  },
-  {
-    id: 'cducontrol',
-    name: 'CDUControl',
-    description: 'Sistema integral para la gestión del Centro Deportivo Universitario.',
-    area: 'deporte',
-    tags: ['Deportes', 'Reservas', 'Torneos'],
-  },
-  {
-    id: 'multiarea',
-    name: 'Multi-Área',
-    description: 'Herramientas compartidas entre las áreas de cultura y deporte.',
+    id: 'asistencias',
+    name: 'Asistencias',
+    description: 'Sistema multi-área de inscripciones, asistencia con QR, estadísticas y reportes para cultura y deporte.',
     area: 'all',
-    tags: ['Integración', 'Colaboración', 'Transversal'],
+    tags: ['Inscripciones', 'QR', 'Estadísticas'],
+  },
+  {
+    id: 'stock_cdu',
+    name: 'Stock CDU',
+    description: 'Inventario deportivo con registro de usuarios, préstamos de equipos y reportes del Centro Deportivo.',
+    area: 'deporte',
+    tags: ['Préstamos', 'Inventario', 'Reportes'],
+  },
+  {
+    id: 'horarios_cdu',
+    name: 'Horarios CDU',
+    description: 'Consulta de horarios de grupos y disciplinas deportivas del Centro Deportivo Universitario.',
+    area: 'deporte',
+    tags: ['Horarios', 'Deportes', 'CDU'],
+  },
+  {
+    id: 'gym_cdu',
+    name: 'GymControl CDU',
+    description: 'Registro y control de acceso a las instalaciones del gimnasio del Centro Deportivo.',
+    area: 'deporte',
+    tags: ['Gimnasio', 'Registro', 'Acceso'],
   },
 ]
 
@@ -240,7 +254,7 @@ export default function LandingPage() {
           <Link href="/" className={styles.logo}>
             <HexagonIcon />
             <div className={styles.logoText}>
-              <span className={styles.logoName}>CDR</span>
+              <span className={styles.logoName}>CRD</span>
               <span className={styles.logoTag}>Universidad del Valle</span>
             </div>
           </Link>
@@ -286,11 +300,11 @@ export default function LandingPage() {
           <div className={styles.heroText}>
             <div className={`${styles.eyebrow} animate-fadeUp`}>
               <span className={styles.eyebrowLine}></span>
-              <span>Sección RCD</span>
+              <span>Sección CRD</span>
             </div>
             <h1 className={`${styles.heroTitle} animate-fadeUp delay-1`}>
               La transformación digital de{' '}
-              <span className={styles.heroTitleAccent}>Recreación, Cultura y Deporte</span>
+              <span className={styles.heroTitleAccent}>Cultura, Recreación y Deporte</span>
             </h1>
             <p className={`${styles.heroDescription} animate-fadeUp delay-2`}>
               Ecosistema de aplicaciones web diseñado para optimizar la gestión operativa, 
@@ -307,11 +321,11 @@ export default function LandingPage() {
             </div>
             <div className={`${styles.heroStats} animate-fadeUp delay-4`}>
               <div className={styles.stat}>
-                <span className={styles.statValue}>6</span>
+                <span className={styles.statValue}>8</span>
                 <span className={styles.statLabel}>Aplicaciones</span>
               </div>
               <div className={styles.stat}>
-                <span className={styles.statValue}>2</span>
+                <span className={styles.statValue}>3</span>
                 <span className={styles.statLabel}>Áreas integradas</span>
               </div>
               <div className={styles.stat}>
@@ -329,7 +343,7 @@ export default function LandingPage() {
                   <span></span>
                   <span></span>
                 </div>
-                <span className={styles.mockupUrl}>rcd.univalle.edu.co</span>
+                <span className={styles.mockupUrl}>crd.univalle.edu.co</span>
               </div>
               <div className={styles.mockupContent}>
                 <div className={styles.mockupSidebar}>
@@ -481,7 +495,7 @@ export default function LandingPage() {
                 <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <div className={styles.flowChip}>Portal RCD</div>
+            <div className={styles.flowChip}>Portal CRD</div>
             <div className={styles.flowArrow}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -575,7 +589,7 @@ export default function LandingPage() {
               Ingresar al portal
               <ArrowRightIcon />
             </Link>
-            <a href="mailto:rcd@correounivalle.edu.co" className={styles.ctaButtonSecondary}>
+            <a href="mailto:crd@correounivalle.edu.co" className={styles.ctaButtonSecondary}>
               Contactar soporte
             </a>
           </div>
@@ -586,7 +600,7 @@ export default function LandingPage() {
       <footer className={styles.footer}>
         <div className={styles.footerContent}>
           <div className={styles.footerLeft}>
-            <span>© 2024 Sección Recreación, Cultura y Deporte</span>
+            <span>© 2026 Sección Cultura, Recreación y Deporte</span>
             <span className={styles.footerDivider}>|</span>
             <span>Universidad del Valle, Cali, Colombia</span>
           </div>
