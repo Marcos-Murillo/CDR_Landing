@@ -4,35 +4,46 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* RCD Univalle Colors */
-  --r: #c0111f;
-  --r2: #e01428;
-  --r3: #8c0b16;
-  --r4: #f9e8e9;
-  --r5: #fdf3f3;
-  --dark: #1a0608;
-  --muted: #7a5558;
-  --off: #fafafa;
-  --border: rgba(192, 17, 31, 0.14);
-  --border2: rgba(192, 17, 31, 0.22);
-  
+  /* CampusFlow · Grid Flow · Design Tokens */
+  --cf-deep:          #042C53;
+  --cf-institutional: #0C447C;
+  --cf-primary:       #185FA5;
+  --cf-accent:        #378ADD;
+  --cf-highlight:     #85B7EB;
+  --cf-surface:       #E6F1FB;
+  --cf-success:       #1D9E75;
+  --cf-warning:       #EF9F27;
+
+  /* Aliases para compatibilidad con el CSS existente */
+  --brand:    var(--cf-deep);
+  --brand2:   var(--cf-institutional);
+  --active:   var(--cf-primary);
+  --active2:  var(--cf-institutional);
+  --green:    var(--cf-success);
+  --green-bg: #d1fae5;
+  --dark:     #0f172a;
+  --muted:    #64748b;
+  --off:      var(--cf-surface);
+  --border:   rgba(24, 95, 165, 0.15);
+  --border2:  rgba(24, 95, 165, 0.28);
+
   /* Base tokens */
   --background: #ffffff;
-  --foreground: #1a0608;
+  --foreground: #0f172a;
   --card: #ffffff;
-  --card-foreground: #1a0608;
+  --card-foreground: #0f172a;
   --popover: #ffffff;
-  --popover-foreground: #1a0608;
-  --primary: #c0111f;
+  --popover-foreground: #0f172a;
+  --primary: var(--cf-primary);
   --primary-foreground: #ffffff;
-  --secondary: #fafafa;
-  --secondary-foreground: #1a0608;
-  --accent: #f9e8e9;
-  --accent-foreground: #1a0608;
-  --destructive: #c0111f;
+  --secondary: var(--cf-surface);
+  --secondary-foreground: #0f172a;
+  --accent: var(--cf-surface);
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --input: rgba(192, 17, 31, 0.14);
-  --ring: #c0111f;
+  --input: rgba(24, 95, 165, 0.12);
+  --ring: var(--cf-primary);
   --radius: 0.5rem;
 }
 

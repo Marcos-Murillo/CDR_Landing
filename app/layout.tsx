@@ -26,16 +26,16 @@ const playfairDisplay = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'RCD Digital — Universidad del Valle',
+  title: 'CampusFlow — Universidad del Valle',
   description: 'Plataforma digital de la Sección Recreación, Cultura y Deporte de la Universidad del Valle',
-  keywords: ['Universidad del Valle', 'RCD', 'Recreación', 'Cultura', 'Deporte', 'Cali', 'Colombia'],
-  authors: [{ name: 'Sección RCD - Universidad del Valle' }],
+  keywords: ['Universidad del Valle', 'CampusFlow', 'Recreación', 'Cultura', 'Deporte', 'Cali', 'Colombia'],
+  authors: [{ name: 'Sección CRD - Universidad del Valle' }],
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#c0111f',
+  themeColor: '#0A2540',
 }
 
 export default function RootLayout({

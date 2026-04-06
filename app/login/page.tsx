@@ -11,17 +11,96 @@ import {
 import { doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '@/lib/firebase'
 import type { UserRole } from '@/hoocks/use-auth'
+import LogoIcon from '@/components/logo-icon'
+import { AnimatedList } from '@/components/ui/animated-list'
 import styles from './login.module.css'
 
 const MODULES = [
-  { name: 'Bitácora AC', area: 'Cultura' },
-  { name: 'Bitácora COM', area: 'Cultura' },
-  { name: 'Stock Cultura', area: 'Cultura' },
-  { name: 'Horarios Cultura', area: 'Cultura' },
-  { name: 'Asistencias', area: 'Multi-área' },
-  { name: 'Stock CDU', area: 'Deporte' },
-  { name: 'Horarios CDU', area: 'Deporte' },
-  { name: 'GymControl CDU', area: 'Deporte' },
+  {
+    name: 'Bitácora AC',
+    tagline: 'Registro de actividades y asistencia de monitores',
+    area: 'Cultura',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <path d="M6 4h8M6 8h8M6 12h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+        <rect x="2" y="2" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="1.6"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'Bitácora COM',
+    tagline: 'Seguimiento del área de comunicaciones',
+    area: 'Cultura',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <path d="M2 4h16v10a2 2 0 01-2 2H4a2 2 0 01-2-2V4z" stroke="currentColor" strokeWidth="1.6"/>
+        <path d="M2 4l8 7 8-7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'Stock Cultura',
+    tagline: 'Inventario de instrumentos y recursos',
+    area: 'Cultura',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <path d="M17 14V6L10 2L3 6V14L10 18L17 14Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M3.5 5.5L10 9.5L16.5 5.5M10 18V9.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'Horarios Cultura',
+    tagline: 'Consulta de horarios de grupos culturales',
+    area: 'Cultura',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <rect x="2" y="3" width="16" height="15" rx="2" stroke="currentColor" strokeWidth="1.6"/>
+        <path d="M2 8h16M6 2v2M14 2v2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'Asistencias',
+    tagline: 'QR, inscripciones y estadísticas multi-área',
+    area: 'Multi-área',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2a4 4 0 100 8 4 4 0 000-8zM4 16c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'Stock CDU',
+    tagline: 'Préstamos y control de equipos deportivos',
+    area: 'Deporte',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <path d="M3 10h14M5 7v6M15 7v6M2 9v2M18 9v2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'Horarios CDU',
+    tagline: 'Horarios de disciplinas del Centro Deportivo',
+    area: 'Deporte',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.6"/>
+        <path d="M10 6v4l3 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'GymControl CDU',
+    tagline: 'Acceso y registro del gimnasio universitario',
+    area: 'Deporte',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <path d="M2 10h16M4 7v6M16 7v6M1 9v2M19 9v2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
 ]
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -197,9 +276,9 @@ export default function LoginPage() {
         <div className={styles.leftContent}>
           <div className={styles.brandHeader}>
             <div className={styles.brandLogo}>
-              <HexagonIcon />
+              <LogoIcon size={40} />
               <div className={styles.brandText}>
-                <span className={styles.brandName}>CRD Digital</span>
+                <span className={styles.brandName}>CampusFlow</span>
                 <span className={styles.brandTag}>Universidad del Valle</span>
               </div>
             </div>
@@ -210,21 +289,27 @@ export default function LoginPage() {
               Gestión digital para <em>Cultura, Recreación y Deporte</em>
             </h1>
             <p className={styles.brandDescription}>
-              Accede a todas las herramientas del ecosistema CRD desde un solo lugar.
+              Accede a todas las herramientas del ecosistema CampusFlow desde un solo lugar.
             </p>
           </div>
 
-          <div className={styles.modulesGrid}>
-            {MODULES.map((m) => (
-              <div key={m.name} className={styles.moduleItem}>
-                <span className={styles.moduleName}>{m.name}</span>
-                <span className={styles.moduleArea}>{m.area}</span>
-              </div>
-            ))}
+          <div className={styles.modulesListWrap}>
+            <AnimatedList stackGap={14} columnGap={72} scaleFactor={0.04} scrollDownDuration={6}>
+              {MODULES.map((m) => (
+                <div key={m.name} className={styles.moduleItem}>
+                  <div className={styles.moduleIcon}>{m.icon}</div>
+                  <div className={styles.moduleInfo}>
+                    <span className={styles.moduleName}>{m.name}</span>
+                    <span className={styles.moduleTagline}>{m.tagline}</span>
+                  </div>
+                  <span className={styles.moduleArea}>{m.area}</span>
+                </div>
+              ))}
+            </AnimatedList>
           </div>
 
           <div className={styles.leftFooter}>
-            <span>© 2026 Sección CRD — Universidad del Valle</span>
+            <span>© 2026 CampusFlow — Universidad del Valle</span>
           </div>
         </div>
         <div className={styles.decorativeCircles}>

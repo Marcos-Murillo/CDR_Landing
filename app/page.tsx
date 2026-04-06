@@ -2,6 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import LogoIcon from '@/components/logo-icon'
+import { FlippingCard } from '@/components/ui/flipping-card'
+import { GlowingButton } from '@/components/ui/glowing-button'
+import { BorderBeam } from '@/components/ui/border-beam'
+import { CursorCard, CursorCardsContainer } from '@/components/ui/cursor-cards'
 import styles from './page.module.css'
 
 const PLATFORMS = [
@@ -63,29 +68,6 @@ const PLATFORMS = [
   },
 ]
 
-const TECH_STACK = [
-  {
-    name: 'Next.js 15',
-    description: 'Framework React con App Router para aplicaciones web modernas y performantes.',
-    icon: 'nextjs',
-  },
-  {
-    name: 'Firebase',
-    description: 'Backend-as-a-Service con autenticación, base de datos y hosting en la nube.',
-    icon: 'firebase',
-  },
-  {
-    name: 'Vercel',
-    description: 'Plataforma de despliegue con CI/CD automático y edge network global.',
-    icon: 'vercel',
-  },
-  {
-    name: 'Real-time',
-    description: 'Sincronización en tiempo real para colaboración y actualizaciones instantáneas.',
-    icon: 'realtime',
-  },
-]
-
 const IMPACT_ITEMS = [
   {
     title: 'Eficiencia Operativa',
@@ -109,27 +91,6 @@ const IMPACT_ITEMS = [
   },
 ]
 
-function HexagonIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M16 2L28 9V23L16 30L4 23V9L16 2Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M16 10L22 13.5V20.5L16 24L10 20.5V13.5L16 10Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 function ArrowRightIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -142,63 +103,6 @@ function ArrowRightIcon() {
       />
     </svg>
   )
-}
-
-function CheckIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M5 10L8.5 13.5L15 7"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function TechIcon({ type }: { type: string }) {
-  switch (type) {
-    case 'nextjs':
-      return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )
-    case 'firebase':
-      return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 20L6 4L12 12L4 20Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M12 12L20 20L4 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M8 14L12 8L14 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )
-    case 'vercel':
-      return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 3L22 21H2L12 3Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )
-    case 'realtime':
-      return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6"/>
-          <path d="M12 5V3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-          <path d="M12 21V19" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-          <path d="M5 12H3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-          <path d="M21 12H19" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-          <path d="M7.05 7.05L5.64 5.64" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-          <path d="M18.36 18.36L16.95 16.95" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-          <path d="M7.05 16.95L5.64 18.36" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-          <path d="M18.36 5.64L16.95 7.05" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-        </svg>
-      )
-    default:
-      return null
-  }
 }
 
 function ImpactIcon({ type }: { type: string }) {
@@ -252,9 +156,9 @@ export default function LandingPage() {
       <nav className={styles.nav}>
         <div className={styles.navContent}>
           <Link href="/" className={styles.logo}>
-            <HexagonIcon />
+            <LogoIcon size={40} />
             <div className={styles.logoText}>
-              <span className={styles.logoName}>CRD</span>
+              <span className={styles.logoName}>CampusFlow</span>
               <span className={styles.logoTag}>Universidad del Valle</span>
             </div>
           </Link>
@@ -262,7 +166,6 @@ export default function LandingPage() {
           <div className={styles.navLinks}>
             <a href="#plataformas">Plataformas</a>
             <a href="#ecosistema">Ecosistema</a>
-            <a href="#tecnologia">Tecnología</a>
             <a href="#impacto">Impacto</a>
           </div>
 
@@ -285,7 +188,6 @@ export default function LandingPage() {
           <div className={styles.mobileMenu}>
             <a href="#plataformas" onClick={() => setMobileMenuOpen(false)}>Plataformas</a>
             <a href="#ecosistema" onClick={() => setMobileMenuOpen(false)}>Ecosistema</a>
-            <a href="#tecnologia" onClick={() => setMobileMenuOpen(false)}>Tecnología</a>
             <a href="#impacto" onClick={() => setMobileMenuOpen(false)}>Impacto</a>
             <Link href="/login" className={styles.mobileMenuCta} onClick={() => setMobileMenuOpen(false)}>
               Ingresar
@@ -300,15 +202,16 @@ export default function LandingPage() {
           <div className={styles.heroText}>
             <div className={`${styles.eyebrow} animate-fadeUp`}>
               <span className={styles.eyebrowLine}></span>
-              <span>Sección CRD</span>
+              <span>CampusFlow</span>
             </div>
             <h1 className={`${styles.heroTitle} animate-fadeUp delay-1`}>
-              La transformación digital de{' '}
+              Controla toda la operación de{' '}
               <span className={styles.heroTitleAccent}>Cultura, Recreación y Deporte</span>
+              {' '} desde un solo lugar
             </h1>
             <p className={`${styles.heroDescription} animate-fadeUp delay-2`}>
-              Ecosistema de aplicaciones web diseñado para optimizar la gestión operativa, 
-              el seguimiento de actividades y la toma de decisiones en la Universidad del Valle.
+              Gestiona inscripciones, asistencia y espacios en tiempo real y más
+              con estadísticas automáticas para tomar mejores decisiones.
             </p>
             <div className={`${styles.heroCtas} animate-fadeUp delay-3`}>
               <Link href="/login" className={styles.ctaPrimary}>
@@ -337,45 +240,117 @@ export default function LandingPage() {
 
           <div className={`${styles.heroMockup} animate-fadeIn delay-3`}>
             <div className={styles.mockupWindow}>
+              {/* Browser chrome */}
               <div className={styles.mockupHeader}>
                 <div className={styles.mockupDots}>
-                  <span></span>
-                  <span></span>
-                  <span></span>
+                  <span className={styles.dot1}></span>
+                  <span className={styles.dot2}></span>
+                  <span className={styles.dot3}></span>
                 </div>
-                <span className={styles.mockupUrl}>crd.univalle.edu.co</span>
+                <span className={styles.mockupUrl}>campusflow.univalle.edu.co/dashboard</span>
               </div>
-              <div className={styles.mockupContent}>
+
+              {/* App shell */}
+              <div className={styles.mockupShell}>
+                {/* Sidebar */}
                 <div className={styles.mockupSidebar}>
+                  <div className={styles.mockupBrand}>
+                    <div className={styles.mockupBrandDot}></div>
+                    <span>CampusFlow</span>
+                  </div>
                   <div className={styles.mockupUser}>
                     <div className={styles.mockupAvatar}>MA</div>
                     <div>
-                      <div className={styles.mockupUserName}>María Alejandra</div>
-                      <div className={styles.mockupUserRole}>Coordinadora</div>
+                      <div className={styles.mockupUserName}>M. Alejandra</div>
+                      <div className={styles.mockupUserRole}>Admin · Cultura</div>
                     </div>
                   </div>
                   <div className={styles.mockupNav}>
-                    <div className={styles.mockupNavItem + ' ' + styles.active}>Dashboard</div>
-                    <div className={styles.mockupNavItem}>Bitácora</div>
-                    <div className={styles.mockupNavItem}>Horarios</div>
-                    <div className={styles.mockupNavItem}>Inventario</div>
+                    <div className={`${styles.mockupNavItem} ${styles.active}`}>
+                      <span className={styles.mockupNavDot}></span>Dashboard
+                    </div>
+                    <div className={styles.mockupNavItem}>
+                      <span className={styles.mockupNavDot}></span>Bitácora
+                    </div>
+                    <div className={styles.mockupNavItem}>
+                      <span className={styles.mockupNavDot}></span>Asistencias
+                    </div>
+                    <div className={styles.mockupNavItem}>
+                      <span className={styles.mockupNavDot}></span>Inventario
+                    </div>
+                    <div className={styles.mockupNavItem}>
+                      <span className={styles.mockupNavDot}></span>Horarios
+                    </div>
                   </div>
                 </div>
+
+                {/* Main area */}
                 <div className={styles.mockupMain}>
-                  <div className={styles.mockupCard + ' ' + styles.floatingCard1}>
-                    <div className={styles.mockupCardIcon}>
-                      <CheckIcon />
-                    </div>
-                    <div>
-                      <div className={styles.mockupCardTitle}>Asistencia registrada</div>
-                      <div className={styles.mockupCardValue}>24 participantes</div>
+                  {/* Topbar */}
+                  <div className={styles.mockupTopbar}>
+                    <span className={styles.mockupTopbarTitle}>Dashboard</span>
+                    <div className={styles.mockupTopbarActions}>
+                      <div className={styles.mockupTopbarBtn}></div>
+                      <div className={styles.mockupTopbarAvatar}>MA</div>
                     </div>
                   </div>
-                  <div className={styles.mockupCard + ' ' + styles.floatingCard2}>
-                    <div className={styles.mockupCardIconAlert}>!</div>
-                    <div>
-                      <div className={styles.mockupCardTitle}>Alerta de inventario</div>
-                      <div className={styles.mockupCardValue}>Stock bajo en percusión</div>
+
+                  {/* Stat cards */}
+                  <div className={styles.mockupStats}>
+                    <div className={styles.mockupStatCard}>
+                      <div className={styles.mockupStatLabel}>Asistencias hoy</div>
+                      <div className={styles.mockupStatValue}>142</div>
+                      <div className={styles.mockupStatBadge + ' ' + styles.green}>+12%</div>
+                    </div>
+                    <div className={styles.mockupStatCard}>
+                      <div className={styles.mockupStatLabel}>Grupos activos</div>
+                      <div className={styles.mockupStatValue}>28</div>
+                      <div className={styles.mockupStatBadge + ' ' + styles.blue}>Cultura</div>
+                    </div>
+                    <div className={styles.mockupStatCard}>
+                      <div className={styles.mockupStatLabel}>Inscripciones</div>
+                      <div className={styles.mockupStatValue}>1.4k</div>
+                      <div className={styles.mockupStatBadge + ' ' + styles.green}>+5%</div>
+                    </div>
+                  </div>
+
+                  {/* Chart bar mock */}
+                  <div className={styles.mockupChartCard}>
+                    <div className={styles.mockupChartHeader}>
+                      <span className={styles.mockupChartTitle}>Asistencia semanal</span>
+                      <span className={styles.mockupChartPill}>Esta semana</span>
+                    </div>
+                    <div className={styles.mockupChart}>
+                      <div className={styles.mockupBar} style={{height:'45%'}}></div>
+                      <div className={styles.mockupBar} style={{height:'70%'}}></div>
+                      <div className={styles.mockupBar} style={{height:'55%'}}></div>
+                      <div className={styles.mockupBar} style={{height:'90%'}}></div>
+                      <div className={styles.mockupBar} style={{height:'65%'}}></div>
+                      <div className={styles.mockupBarActive} style={{height:'80%'}}></div>
+                      <div className={styles.mockupBar} style={{height:'40%'}}></div>
+                    </div>
+                    <div className={styles.mockupChartLabels}>
+                      <span>L</span><span>M</span><span>X</span>
+                      <span>J</span><span>V</span><span>S</span><span>D</span>
+                    </div>
+                  </div>
+
+                  {/* Activity list */}
+                  <div className={styles.mockupActivity}>
+                    <div className={styles.mockupActivityRow}>
+                      <div className={styles.mockupActivityDot + ' ' + styles.green}></div>
+                      <span className={styles.mockupActivityText}>Danza Contemporánea — 24 asistentes</span>
+                      <span className={styles.mockupActivityTime}>09:00</span>
+                    </div>
+                    <div className={styles.mockupActivityRow}>
+                      <div className={styles.mockupActivityDot + ' ' + styles.blue}></div>
+                      <span className={styles.mockupActivityText}>Teatro — 18 asistentes</span>
+                      <span className={styles.mockupActivityTime}>10:30</span>
+                    </div>
+                    <div className={styles.mockupActivityRow}>
+                      <div className={styles.mockupActivityDot + ' ' + styles.yellow}></div>
+                      <span className={styles.mockupActivityText}>Stock bajo: Percusión</span>
+                      <span className={styles.mockupActivityTime}>Alerta</span>
                     </div>
                   </div>
                 </div>
@@ -402,47 +377,62 @@ export default function LandingPage() {
           </div>
 
           <div className={styles.filterTabs}>
-            <button
-              className={`${styles.filterTab} ${activeFilter === 'all' ? styles.active : ''}`}
+            <GlowingButton
+              glowColor={activeFilter === 'all' ? '#2563EB' : '#93c5fd'}
+              className={`${styles.filterTabBtn} ${activeFilter === 'all' ? styles.filterTabActive : ''}`}
               onClick={() => setActiveFilter('all')}
             >
               Todas
-            </button>
-            <button
-              className={`${styles.filterTab} ${activeFilter === 'cultura' ? styles.active : ''}`}
+            </GlowingButton>
+            <GlowingButton
+              glowColor={activeFilter === 'cultura' ? '#2563EB' : '#93c5fd'}
+              className={`${styles.filterTabBtn} ${activeFilter === 'cultura' ? styles.filterTabActive : ''}`}
               onClick={() => setActiveFilter('cultura')}
             >
               Cultura
-            </button>
-            <button
-              className={`${styles.filterTab} ${activeFilter === 'deporte' ? styles.active : ''}`}
+            </GlowingButton>
+            <GlowingButton
+              glowColor={activeFilter === 'deporte' ? '#2563EB' : '#93c5fd'}
+              className={`${styles.filterTabBtn} ${activeFilter === 'deporte' ? styles.filterTabActive : ''}`}
               onClick={() => setActiveFilter('deporte')}
             >
               Deporte
-            </button>
+            </GlowingButton>
           </div>
 
           <div className={styles.platformsGrid}>
             {filteredPlatforms.map((platform) => (
-              <div key={platform.id} className={styles.platformCard}>
-                <div className={styles.platformCardLine}></div>
-                <div className={styles.platformCardContent}>
-                  <div className={styles.platformHeader}>
-                    <h3 className={styles.platformName}>{platform.name}</h3>
-                    <span className={`${styles.platformArea} ${styles[platform.area]}`}>
-                      {platform.area === 'all' ? 'Multi-área' : platform.area}
-                    </span>
-                  </div>
-                  <p className={styles.platformDescription}>{platform.description}</p>
-                  <div className={styles.platformTags}>
-                    {platform.tags.map((tag) => (
-                      <span key={tag} className={styles.platformTag}>
-                        {tag}
+              <FlippingCard
+                key={platform.id}
+                width={320}
+                height={200}
+                className="!rounded-2xl"
+                frontContent={
+                  <div className={styles.flipFront}>
+                    <div className={styles.platformCardLine} />
+                    <div className={styles.platformHeader}>
+                      <h3 className={styles.platformName}>{platform.name}</h3>
+                      <span className={`${styles.platformArea} ${styles[platform.area]}`}>
+                        {platform.area === 'all' ? 'Multi-área' : platform.area}
                       </span>
-                    ))}
+                    </div>
+                    <p className={styles.platformDescription}>{platform.description}</p>
+                    <div className={styles.platformTags}>
+                      {platform.tags.map((tag) => (
+                        <span key={tag} className={styles.platformTag}>{tag}</span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </div>
+                }
+                backContent={
+                  <div className={styles.flipBack}>
+                    <p className={styles.flipBackDesc}>{platform.description}</p>
+                    <Link href="/login" className={styles.flipBackBtn}>
+                      Acceder <ArrowRightIcon />
+                    </Link>
+                  </div>
+                }
+              />
             ))}
           </div>
         </div>
@@ -466,25 +456,34 @@ export default function LandingPage() {
 
           <div className={styles.ecosystemGrid}>
             <div className={styles.ecosystemCard}>
-              <span className={styles.ecosystemNumber}>01</span>
-              <h3 className={styles.ecosystemCardTitle}>Operativa</h3>
-              <p className={styles.ecosystemCardDescription}>
-                Control de asistencia, gestión de grupos, seguimiento de actividades y registro de participación.
-              </p>
+              <BorderBeam lightColor="#3b82f6" duration={6} lightWidth={180} />
+              <div className={styles.ecosystemCardInner}>
+                <span className={styles.ecosystemNumber}>01</span>
+                <h3 className={styles.ecosystemCardTitle}>Operativa</h3>
+                <p className={styles.ecosystemCardDescription}>
+                  Control de asistencia, gestión de grupos, seguimiento de actividades y registro de participación.
+                </p>
+              </div>
             </div>
             <div className={styles.ecosystemCard}>
-              <span className={styles.ecosystemNumber}>02</span>
-              <h3 className={styles.ecosystemCardTitle}>Formativa</h3>
-              <p className={styles.ecosystemCardDescription}>
-                Programación de horarios, coordinación de espacios, gestión de instructores y planificación semestral.
-              </p>
+              <BorderBeam lightColor="#8b5cf6" duration={8} lightWidth={180} />
+              <div className={styles.ecosystemCardInner}>
+                <span className={styles.ecosystemNumber}>02</span>
+                <h3 className={styles.ecosystemCardTitle}>Formativa</h3>
+                <p className={styles.ecosystemCardDescription}>
+                  Programación de horarios, coordinación de espacios, gestión de instructores y planificación semestral.
+                </p>
+              </div>
             </div>
             <div className={styles.ecosystemCard}>
-              <span className={styles.ecosystemNumber}>03</span>
-              <h3 className={styles.ecosystemCardTitle}>Logística</h3>
-              <p className={styles.ecosystemCardDescription}>
-                Inventario de recursos, préstamos de equipos, mantenimiento y trazabilidad de activos.
-              </p>
+              <BorderBeam lightColor="#22c55e" duration={10} lightWidth={180} />
+              <div className={styles.ecosystemCardInner}>
+                <span className={styles.ecosystemNumber}>03</span>
+                <h3 className={styles.ecosystemCardTitle}>Logística</h3>
+                <p className={styles.ecosystemCardDescription}>
+                  Inventario de recursos, préstamos de equipos, mantenimiento y trazabilidad de activos.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -495,7 +494,7 @@ export default function LandingPage() {
                 <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <div className={styles.flowChip}>Portal CRD</div>
+            <div className={styles.flowChip}>Portal CampusFlow</div>
             <div className={styles.flowArrow}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -508,39 +507,6 @@ export default function LandingPage() {
               </svg>
             </div>
             <div className={styles.flowChip}>Datos</div>
-          </div>
-        </div>
-      </section>
-
-      {/* Technology Section */}
-      <section id="tecnologia" className={styles.technology}>
-        <div className={styles.sectionContent}>
-          <div className={styles.techGrid}>
-            <div className={styles.techText}>
-              <div className={styles.eyebrow}>
-                <span className={styles.eyebrowLine}></span>
-                <span>Tecnología</span>
-              </div>
-              <h2 className={styles.sectionTitle}>
-                Construido con tecnología de vanguardia
-              </h2>
-              <p className={styles.sectionDescription}>
-                Stack moderno que garantiza rendimiento, seguridad y escalabilidad para las necesidades actuales y futuras de la universidad.
-              </p>
-            </div>
-            <div className={styles.techCards}>
-              {TECH_STACK.map((tech) => (
-                <div key={tech.name} className={styles.techCard}>
-                  <div className={styles.techCardIcon}>
-                    <TechIcon type={tech.icon} />
-                  </div>
-                  <div>
-                    <h3 className={styles.techCardName}>{tech.name}</h3>
-                    <p className={styles.techCardDescription}>{tech.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -561,17 +527,24 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className={styles.impactGrid}>
+          <CursorCardsContainer className={styles.impactGrid}>
             {IMPACT_ITEMS.map((item) => (
-              <div key={item.title} className={styles.impactCard}>
+              <CursorCard
+                key={item.title}
+                borderColor="#e2e8f0"
+                primaryHue="#93c5fd"
+                secondaryHue="#2563EB"
+                illuminationColor="#3b82f620"
+                className={styles.impactCard}
+              >
                 <div className={styles.impactCardIcon}>
                   <ImpactIcon type={item.icon} />
                 </div>
                 <h3 className={styles.impactCardTitle}>{item.title}</h3>
                 <p className={styles.impactCardDescription}>{item.description}</p>
-              </div>
+              </CursorCard>
             ))}
-          </div>
+          </CursorCardsContainer>
         </div>
       </section>
 
@@ -589,7 +562,7 @@ export default function LandingPage() {
               Ingresar al portal
               <ArrowRightIcon />
             </Link>
-            <a href="mailto:crd@correounivalle.edu.co" className={styles.ctaButtonSecondary}>
+            <a href="mailto:campusflow@correounivalle.edu.co" className={styles.ctaButtonSecondary}>
               Contactar soporte
             </a>
           </div>

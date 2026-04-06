@@ -1,0 +1,195 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  background: #f8fafc;
+}
+
+.content {
+  flex: 1;
+  margin-left: 72px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(37, 99, 235, 0.08);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.topbarLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.topbarEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.eyebrowLine {
+  width: 18px;
+  height: 2px;
+  background: #2563EB;
+  display: block;
+  flex-shrink: 0;
+}
+
+.topbarEyebrow span:last-child {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #2563EB;
+}
+
+.topbarTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.main {
+  flex: 1;
+  padding: 28px 32px;
+}
+
+.sectionDesc {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
+}
+
+.card:hover .cardLine {
+  transform: scaleX(1);
+}
+
+.card:hover .cardAction {
+  color: #2563EB;
+}
+
+.cardLine {
+  height: 3px;
+  background: #2563EB;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-out;
+}
+
+.cardBody {
+  padding: 22px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.cardIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardArea {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.cardAreaDeporte {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.cardName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.cardDesc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #64748b;
+  flex: 1;
+  margin-bottom: 16px;
+}
+
+.cardAction {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #0f172a;
+  transition: color 0.2s;
+}
+
+.empty {
+  padding: 64px 24px;
+  text-align: center;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+@media (max-width: 900px) {
+  .content { margin-left: 0; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .main { padding: 20px 16px; }
+  .topbar { padding: 16px; }
+  .grid { grid-template-columns: 1fr; }
+}

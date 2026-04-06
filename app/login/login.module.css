@@ -7,7 +7,7 @@
 /* Left Panel */
 .leftPanel {
   position: relative;
-  background: var(--r);
+  background: #0A2540;
   padding: 48px;
   display: flex;
   flex-direction: column;
@@ -68,7 +68,7 @@
 
 .brandTitle em {
   font-style: italic;
-  color: rgba(255, 255, 255, 0.9);
+  color: #93c5fd;
 }
 
 .brandDescription {
@@ -78,21 +78,77 @@
   max-width: 400px;
 }
 
-.modulesGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+.modulesListWrap {
+  position: relative;
+  height: 280px;
+  width: 100%;
+  overflow: hidden;
   margin-bottom: auto;
 }
 
 .moduleItem {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  color: #0f172a;
+}
+
+.moduleIcon {
+  width: 36px;
+  height: 36px;
   border-radius: 8px;
+  background: #eff6ff;
+  color: #2563EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.moduleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.moduleName {
+  font-size: 13px;
+  font-weight: 700;
+  color: #000000 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moduleTagline {
+  font-size: 11px;
+  color: #475569 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moduleArea {
+  font-size: 10px;
+  font-weight: 600;
+  color: #1d4ed8 !important;
+  background: #dbeafe;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 .moduleName {
@@ -128,7 +184,7 @@
 .circle3 {
   position: absolute;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .circle1 {
@@ -171,14 +227,14 @@
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: var(--muted);
+  color: #64748b;
   text-decoration: none;
   margin-bottom: 48px;
   transition: color 0.2s;
 }
 
 .backLink:hover {
-  color: var(--r);
+  color: #2563EB;
 }
 
 .formContainer {
@@ -199,7 +255,7 @@
 .eyebrowLine {
   width: 20px;
   height: 2px;
-  background: var(--r);
+  background: #2563EB;
 }
 
 .eyebrow span:last-child {
@@ -207,20 +263,20 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--r);
+  color: #2563EB;
 }
 
 .formTitle {
   font-family: var(--font-serif);
   font-size: 32px;
   font-weight: 700;
-  color: var(--dark);
+  color: #0f172a;
   margin-bottom: 8px;
 }
 
 .formSubtitle {
   font-size: 15px;
-  color: var(--muted);
+  color: #64748b;
   line-height: 1.5;
 }
 
@@ -230,11 +286,11 @@
   align-items: center;
   gap: 10px;
   padding: 12px 16px;
-  background: var(--r5);
-  border: 1px solid var(--r4);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
   border-radius: 8px;
   margin-bottom: 24px;
-  color: var(--r);
+  color: #ef4444;
   font-size: 14px;
 }
 
@@ -254,16 +310,16 @@
 .label {
   font-size: 13px;
   font-weight: 500;
-  color: var(--dark);
+  color: #0f172a;
 }
 
 .input {
   width: 100%;
   padding: 12px 14px;
   font-size: 15px;
-  color: var(--dark);
+  color: #0f172a;
   background: #ffffff;
-  border: 1px solid var(--border2);
+  border: 1px solid rgba(37, 99, 235, 0.22);
   border-radius: 8px;
   outline: none;
   transition: all 0.2s;
@@ -271,17 +327,16 @@
 }
 
 .input::placeholder {
-  color: var(--muted);
-  opacity: 0.6;
+  color: #94a3b8;
 }
 
 .input:focus {
-  border-color: var(--r);
-  box-shadow: 0 0 0 3px rgba(192, 17, 31, 0.1);
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .input:disabled {
-  background: var(--off);
+  background: #f8fafc;
   cursor: not-allowed;
 }
 
@@ -306,12 +361,12 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--muted);
+  color: #64748b;
   transition: color 0.2s;
 }
 
 .passwordToggle:hover {
-  color: var(--dark);
+  color: #0f172a;
 }
 
 .passwordToggle:disabled {
@@ -330,26 +385,26 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: var(--dark);
+  color: #0f172a;
   cursor: pointer;
 }
 
 .checkbox {
   width: 16px;
   height: 16px;
-  accent-color: var(--r);
+  accent-color: #2563EB;
   cursor: pointer;
 }
 
 .forgotLink {
   font-size: 14px;
-  color: var(--r);
+  color: #2563EB;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .forgotLink:hover {
-  color: var(--r2);
+  color: #1d4ed8;
   text-decoration: underline;
 }
 
@@ -363,7 +418,7 @@
   font-size: 15px;
   font-weight: 500;
   color: #ffffff;
-  background: var(--r);
+  background: #2563EB;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -372,9 +427,9 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  background: var(--r2);
+  background: #1d4ed8;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(192, 17, 31, 0.3);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .submitButton:disabled {
@@ -403,12 +458,12 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border);
+  background: rgba(37, 99, 235, 0.12);
 }
 
 .divider span {
   font-size: 13px;
-  color: var(--muted);
+  color: #64748b;
 }
 
 /* Google Button */
@@ -421,17 +476,17 @@
   padding: 14px 24px;
   font-size: 15px;
   font-weight: 500;
-  color: var(--dark);
+  color: #0f172a;
   background: #ffffff;
-  border: 1px solid var(--border2);
+  border: 1px solid rgba(37, 99, 235, 0.22);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .googleButton:hover:not(:disabled) {
-  background: var(--off);
-  border-color: var(--dark);
+  background: #f8fafc;
+  border-color: #0f172a;
 }
 
 .googleButton:disabled {
@@ -443,13 +498,13 @@
 .legalText {
   margin-top: 24px;
   font-size: 12px;
-  color: var(--muted);
+  color: #64748b;
   text-align: center;
   line-height: 1.6;
 }
 
 .legalText a {
-  color: var(--r);
+  color: #2563EB;
   text-decoration: none;
 }
 

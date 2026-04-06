@@ -16,17 +16,12 @@ const ROLE_MAP: Record<string, Record<string, string>> = {
     monitor: 'guest',
     superadmin: 'superadmin',
   },
-  cducontrol: {
-    admin: 'admin',
-    monitor: 'monitor',
-    superadmin: 'superadmin',
-  },
-  inventario_cultura: {
+  stock_cdu: {
     admin: 'admin',
     monitor: 'monitor',
     superadmin: 'admin',
   },
-  inventario_deporte: {
+  stock_cultura: {
     admin: 'admin',
     monitor: 'monitor',
     superadmin: 'admin',
@@ -36,12 +31,24 @@ const ROLE_MAP: Record<string, Record<string, string>> = {
     monitor: 'monitor',
     superadmin: 'admin',
   },
+  horarios_cdu: {
+    admin: 'admin',
+    monitor: 'monitor',
+    superadmin: 'admin',
+  },
+  gym_cdu: {
+    admin: 'admin',
+    monitor: 'monitor',
+    superadmin: 'admin',
+  },
   asistencias_cultura: {
     admin: 'ADMIN',
+    monitor: 'MONITOR',
     superadmin: 'SUPER_ADMIN',
   },
   asistencias_deporte: {
     admin: 'ADMIN',
+    monitor: 'MONITOR',
     superadmin: 'SUPER_ADMIN',
   },
 }

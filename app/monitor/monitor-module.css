@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--dark);
+  background: #0A2540;
 }
 
 /* Header */
@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--r);
+  color: #2563EB;
   text-decoration: none;
 }
 
@@ -46,7 +46,7 @@
   font-family: var(--font-mono);
   font-size: 24px;
   font-weight: 500;
-  color: var(--r);
+  color: #93c5fd;
 }
 
 .signOutButton {
@@ -64,9 +64,9 @@
 }
 
 .signOutButton:hover {
-  background: rgba(192, 17, 31, 0.2);
-  border-color: rgba(192, 17, 31, 0.4);
-  color: var(--r4);
+  background: rgba(37, 99, 235, 0.2);
+  border-color: rgba(37, 99, 235, 0.4);
+  color: #bfdbfe;
 }
 
 /* Main */
@@ -99,8 +99,8 @@
 }
 
 .moduleCard:hover {
-  background: rgba(192, 17, 31, 0.15);
-  border-color: rgba(192, 17, 31, 0.3);
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.35);
   transform: translateY(-2px);
 }
 
@@ -108,8 +108,8 @@
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: rgba(192, 17, 31, 0.2);
-  color: var(--r);
+  background: rgba(37, 99, 235, 0.2);
+  color: #93c5fd;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,11 +153,9 @@
   .modulesGrid {
     grid-template-columns: 1fr;
   }
-  
   .moduleCard {
     padding: 16px;
   }
-  
   .moduleIcon {
     width: 40px;
     height: 40px;
