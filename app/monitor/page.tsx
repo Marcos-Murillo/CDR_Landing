@@ -109,7 +109,7 @@ const SSO_REDIRECT: Record<string, string> = {
   stock_cdu: '/',
   horarios: '/adofi',
   horarios_cdu: '/',
-  gym_cdu: '/',
+  gym_cdu: '/admin',
   asistencias_cultura: '/estadisticas',
   asistencias_deporte: '/estadisticas',
 }

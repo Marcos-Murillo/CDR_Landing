@@ -146,7 +146,7 @@ export default function SuperAdminPage() {
   const SSO_REDIRECT: Record<string, string> = {
     bitacoraac: '/superadmin', bitacora_comunicaciones: '/superadmin',
     stock_cultura: '/', horarios: '/adofi',
-    stock_cdu: '/superadmin', horarios_cdu: '/', gym_cdu: '/',
+    stock_cdu: '/superadmin', horarios_cdu: '/', gym_cdu: '/admin',
     asistencias_cultura: '/super-admin', asistencias_deporte: '/super-admin',
   }
 
