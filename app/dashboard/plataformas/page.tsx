@@ -18,7 +18,7 @@ const ALL_MODULES = [
 
 const SSO_PLATFORMS: Record<string, string> = {
   bitacoraac: '/admin', bitacora_comunicaciones: '/admin',
-  stock_cdu: '/', stock_cultura: '/', horarios: '/adofi', horarios_cdu: '/', gym_cdu: '/',
+  stock_cdu: '/', stock_cultura: '/', horarios: '/adofi', horarios_cdu: '/', gym_cdu: '/admin',
   asistencias_cultura: '/usuarios', asistencias_deporte: '/usuarios',
 }
 
