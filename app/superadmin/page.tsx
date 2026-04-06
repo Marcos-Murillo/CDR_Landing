@@ -123,7 +123,7 @@ function ExternalIcon() {
 // ── Page ───────────────────────────────────────────────────────────────────
 export default function SuperAdminPage() {
   const router = useRouter()
-  const { user: _user } = useAuth()
+  const { user, loading } = useAuth()
 
   const [users, setUsers]               = useState<CreatedUser[]>([])
   const [loadingUsers, setLoadingUsers] = useState(true)
@@ -181,7 +181,11 @@ export default function SuperAdminPage() {
   const [editError, setEditError]           = useState('')
   const [openDropdown, setOpenDropdown]     = useState<string | null>(null)
 
-  useEffect(() => { fetchUsers() }, [])
+  useEffect(() => {
+    if (!loading && (!user || user.role !== 'superadmin')) router.push('/login')
+  }, [user, loading, router])
+
+  useEffect(() => { if (user?.role === 'superadmin') fetchUsers() }, [user])
 
   const fetchUsers = async () => {
     setLoadingUsers(true)
@@ -239,6 +243,12 @@ export default function SuperAdminPage() {
   const getPlatNames  = (ids: string[])  => ids.map((id) => PLATFORMS.find((p) => p.id === id)?.name ?? id).join(', ')
 
   // ── Render ────────────────────────────────────────────────────────────────
+  if (loading || !user) {
+    return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#0a0a0a', color: '#fff' }}>Cargando...</div>
+  }
+
+  if (user.role !== 'superadmin') return null
+
   return (
     <div className={styles.page}>
 
