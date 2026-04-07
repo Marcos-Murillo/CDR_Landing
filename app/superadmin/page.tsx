@@ -130,6 +130,9 @@ export default function SuperAdminPage() {
   const [showForm, setShowForm]         = useState(false)
   const [success, setSuccess]           = useState('')
   const [error, setError]               = useState('')
+  const [mounted, setMounted]           = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
 
   const PLATFORM_URLS: Record<string, string> = {
     bitacoraac:              process.env.NEXT_PUBLIC_URL_BITACORA ?? '',
@@ -182,12 +185,17 @@ export default function SuperAdminPage() {
   const [openDropdown, setOpenDropdown]     = useState<string | null>(null)
 
   useEffect(() => {
+    if (!mounted) return
     if (loading) return
-    const isSuperadminSession = typeof window !== 'undefined' && sessionStorage.getItem('superadmin_auth') === 'true'
+    const isSuperadminSession = sessionStorage.getItem('superadmin_auth') === 'true'
     if (!isSuperadminSession && (!user || user.role !== 'superadmin')) router.push('/login')
-  }, [user, loading, router])
+  }, [user, loading, router, mounted])
 
-  useEffect(() => { if (user?.role === 'superadmin') fetchUsers() }, [user])
+  useEffect(() => {
+    if (!mounted) return
+    const isSuperadminSession = sessionStorage.getItem('superadmin_auth') === 'true'
+    if (user?.role === 'superadmin' || isSuperadminSession) fetchUsers()
+  }, [user, mounted])
 
   const fetchUsers = async () => {
     setLoadingUsers(true)
@@ -245,11 +253,8 @@ export default function SuperAdminPage() {
   const getPlatNames  = (ids: string[])  => ids.map((id) => PLATFORMS.find((p) => p.id === id)?.name ?? id).join(', ')
 
   // ── Render ────────────────────────────────────────────────────────────────
-  if (loading || !user) {
-    const isSuperadminSession = typeof window !== 'undefined' && sessionStorage.getItem('superadmin_auth') === 'true'
-    if (!isSuperadminSession) {
-      return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#0a0a0a', color: '#fff' }}>Cargando...</div>
-    }
+  if (!mounted || (loading && sessionStorage.getItem('superadmin_auth') !== 'true')) {
+    return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#0a0a0a', color: '#fff' }}>Cargando...</div>
   }
 
   if (!loading && user && user.role !== 'superadmin') return null
