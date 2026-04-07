@@ -223,6 +223,7 @@ export default function LoginPage() {
     try {
       // Superadmin local check
       if (identifier === SUPERADMIN_ID && password === SUPERADMIN_PASS) {
+        sessionStorage.setItem('superadmin_auth', 'true')
         router.push('/superadmin')
         return
       }

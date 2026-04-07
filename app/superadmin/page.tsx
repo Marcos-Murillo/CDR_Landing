@@ -182,7 +182,9 @@ export default function SuperAdminPage() {
   const [openDropdown, setOpenDropdown]     = useState<string | null>(null)
 
   useEffect(() => {
-    if (!loading && (!user || user.role !== 'superadmin')) router.push('/login')
+    if (loading) return
+    const isSuperadminSession = typeof window !== 'undefined' && sessionStorage.getItem('superadmin_auth') === 'true'
+    if (!isSuperadminSession && (!user || user.role !== 'superadmin')) router.push('/login')
   }, [user, loading, router])
 
   useEffect(() => { if (user?.role === 'superadmin') fetchUsers() }, [user])
@@ -197,7 +199,7 @@ export default function SuperAdminPage() {
     finally  { setLoadingUsers(false) }
   }
 
-  const handleSignOut = async () => { await signOut(auth); router.push('/login') }
+  const handleSignOut = async () => { sessionStorage.removeItem('superadmin_auth'); await signOut(auth); router.push('/login') }
 
   const resetForm = () => { setDisplayName(''); setEmail(''); setPassword(''); setRole('monitor'); setArea('cultura'); setPlatforms([]); setError('') }
 
@@ -244,10 +246,13 @@ export default function SuperAdminPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   if (loading || !user) {
-    return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#0a0a0a', color: '#fff' }}>Cargando...</div>
+    const isSuperadminSession = typeof window !== 'undefined' && sessionStorage.getItem('superadmin_auth') === 'true'
+    if (!isSuperadminSession) {
+      return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#0a0a0a', color: '#fff' }}>Cargando...</div>
+    }
   }
 
-  if (user.role !== 'superadmin') return null
+  if (!loading && user && user.role !== 'superadmin') return null
 
   return (
     <div className={styles.page}>
