@@ -187,7 +187,7 @@ export default function SuperAdminPage() {
   useEffect(() => {
     if (!mounted) return
     if (loading) return
-    const isSuperadminSession = sessionStorage.getItem('superadmin_auth') === 'true'
+    const isSuperadminSession = typeof window !== 'undefined' && sessionStorage.getItem('superadmin_auth') === 'true'
     if (!isSuperadminSession && (!user || user.role !== 'superadmin')) router.push('/login')
   }, [user, loading, router, mounted])
 
