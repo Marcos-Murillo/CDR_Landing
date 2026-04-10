@@ -134,9 +134,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!user) return
-    const hasDeporte = user.area === 'deporte' || user.area === 'all'
-    const hasAccess = user.platforms.includes('asistencias_deporte') || user.area === 'deporte'
-    if (hasDeporte && hasAccess) router.replace('/dashboard/asistencias-deporte')
+    // Superadmin siempre va a su página
+    if (user.role === 'superadmin') { router.replace('/superadmin'); return }
+    // Admin de deporte va a asistencias-deporte
+    if (user.area === 'deporte') { router.replace('/dashboard/asistencias-deporte'); return }
   }, [user, router])
 
   const handleOpenAsistencias = async () => {

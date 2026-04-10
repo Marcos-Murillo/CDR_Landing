@@ -119,10 +119,19 @@ const ERROR_MESSAGES: Record<string, string> = {
 const SUPERADMIN_ID = '1007260358'
 const SUPERADMIN_PASS = 'romanos812'
 
-function redirectByRole(role: UserRole, router: ReturnType<typeof useRouter>) {
-  if (role === 'superadmin') router.push('/superadmin')
-  else if (role === 'admin') router.push('/dashboard')
-  else router.push('/monitor')
+function redirectByRole(
+  role: UserRole,
+  router: ReturnType<typeof useRouter>,
+  area?: string
+) {
+  if (role === 'superadmin') {
+    router.push('/superadmin')
+  } else if (role === 'admin') {
+    if (area === 'deporte') router.push('/dashboard/asistencias-deporte')
+    else router.push('/dashboard')
+  } else {
+    router.push('/monitor')
+  }
 }
 
 // ── Icons ──────────────────────────────────────────────────────────────────
@@ -237,8 +246,9 @@ export default function LoginPage() {
         return
       }
 
-      const role = snap.data().role as UserRole
-      redirectByRole(role, router)
+      const data = snap.data()
+      const role = data.role as UserRole
+      redirectByRole(role, router, data.area)
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code ?? 'default'
       setError(getErrorMessage(code))
@@ -260,8 +270,9 @@ export default function LoginPage() {
         return
       }
 
-      const role = snap.data().role as UserRole
-      redirectByRole(role, router)
+      const data = snap.data()
+      const role = data.role as UserRole
+      redirectByRole(role, router, data.area)
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code ?? 'default'
       setError(getErrorMessage(code))

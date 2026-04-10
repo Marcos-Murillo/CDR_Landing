@@ -103,7 +103,10 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
     user.area === 'cultura' ||
     user.area === 'deporte'
 
-  const asistenciasHref = user.area === 'deporte' ? '/dashboard/asistencias-deporte' : '/dashboard'
+  const asistenciasHref =
+    user.area === 'deporte'
+      ? '/dashboard/asistencias-deporte'
+      : '/dashboard'
   const hasStockCultura = user.platforms.includes('stock_cultura')
   const hasStockCdu     = user.platforms.includes('stock_cdu')
   const hasGymCdu       = user.platforms.includes('gym_cdu')
