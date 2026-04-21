@@ -118,11 +118,18 @@ export async function POST(req: NextRequest) {
       (platform === 'asistencias_cultura' && (profile.area === 'cultura' || profile.area === 'all')) ||
       (platform === 'asistencias_deporte' && (profile.area === 'deporte' || profile.area === 'all'))
 
+    // Horarios platforms are auto-granted based on area
+    const isHorariosPlatform = platform === 'horarios' || platform === 'horarios_cdu'
+    const areaMatchesHorarios =
+      (platform === 'horarios' && (profile.area === 'cultura' || profile.area === 'all')) ||
+      (platform === 'horarios_cdu' && (profile.area === 'deporte' || profile.area === 'all'))
+
     const hasAccess =
       isSuperadmin ||
       profile.platforms?.includes(platform) ||
       profile.area === 'all' ||
-      (isAsistenciasPlatform && areaMatchesAsistencias)
+      (isAsistenciasPlatform && areaMatchesAsistencias) ||
+      (isHorariosPlatform && areaMatchesHorarios)
 
     if (!hasAccess) {
       return NextResponse.json({ error: 'Sin acceso a esta plataforma.' }, { status: 403 })

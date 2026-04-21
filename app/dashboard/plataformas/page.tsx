@@ -18,7 +18,7 @@ const ALL_MODULES = [
 
 const SSO_PLATFORMS: Record<string, string> = {
   bitacoraac: '/admin', bitacora_comunicaciones: '/admin',
-  stock_cdu: '/', stock_cultura: '/', horarios: '/adofi', horarios_cdu: '/', gym_cdu: '/admin',
+  stock_cdu: '/', stock_cultura: '/', horarios: '/adofi', horarios_cdu: '/adofi', gym_cdu: '/admin',
   asistencias_cultura: '/usuarios', asistencias_deporte: '/usuarios',
 }
 
@@ -67,11 +67,19 @@ export default function PlataformasPage() {
   if (!user) return null
 
   const ASISTENCIAS_IDS = ['asistencias_cultura', 'asistencias_deporte']
+  const HORARIOS_IDS = ['horarios', 'horarios_cdu']
+
   const availableModules = ALL_MODULES.filter(m => {
     if (ASISTENCIAS_IDS.includes(m.id)) {
       if (user.area === 'all') return true
       if (user.platforms.includes(m.id)) return true
       return m.id === `asistencias_${user.area}`
+    }
+    if (HORARIOS_IDS.includes(m.id)) {
+      if (user.area === 'all') return true
+      if (user.platforms.includes(m.id)) return true
+      return (m.id === 'horarios' && user.area === 'cultura') ||
+             (m.id === 'horarios_cdu' && user.area === 'deporte')
     }
     return user.platforms.includes(m.id)
   })
