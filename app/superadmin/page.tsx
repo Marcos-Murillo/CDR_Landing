@@ -12,15 +12,16 @@ import { GradientSlideButton } from '@/components/ui/gradient-slide-button'
 import styles from './superadmin.module.css'
 
 const PLATFORMS = [
-  { id: 'bitacoraac',              name: 'Bitácora AC',       area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_BITACORA' },
-  { id: 'bitacora_comunicaciones', name: 'Bitácora COM',      area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES' },
-  { id: 'stock_cultura',           name: 'Stock Cultura',     area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_INVENTARIO_CULTURA' },
-  { id: 'horarios',                name: 'Horarios Cultura',  area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_HORARIOS' },
-  { id: 'asistencias_cultura',     name: 'Asistencias',       area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
-  { id: 'stock_cdu',               name: 'Stock CDU',         area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_INVENTARIO_DEPORTE' },
-  { id: 'horarios_cdu',            name: 'Horarios CDU',      area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_HORARIOS_CDU' },
-  { id: 'gym_cdu',                 name: 'GymControl CDU',    area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_GYM_CDU' },
-  { id: 'asistencias_deporte',     name: 'Asistencias',       area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
+  { id: 'bitacoraac',              name: 'Bitácora AC',         area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_BITACORA' },
+  { id: 'bitacora_comunicaciones', name: 'Bitácora COM',        area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES' },
+  { id: 'stock_cultura',           name: 'Stock Cultura',       area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_INVENTARIO_CULTURA' },
+  { id: 'horarios',                name: 'Horarios Cultura',    area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_HORARIOS' },
+  { id: 'asistencias_cultura',     name: 'Asistencias',         area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
+  { id: 'canal_comunicaciones',    name: 'Canal Comunicaciones',area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_CANAL_COMUNICACIONES' },
+  { id: 'stock_cdu',               name: 'Stock CDU',           area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_INVENTARIO_DEPORTE' },
+  { id: 'horarios_cdu',            name: 'Horarios CDU',        area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_HORARIOS_CDU' },
+  { id: 'gym_cdu',                 name: 'GymControl CDU',      area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_GYM_CDU' },
+  { id: 'asistencias_deporte',     name: 'Asistencias',         area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
 ].map((p) => ({
   ...p,
   available: !!({
@@ -32,6 +33,7 @@ const PLATFORMS = [
     NEXT_PUBLIC_URL_GYM_CDU:                 process.env.NEXT_PUBLIC_URL_GYM_CDU,
     NEXT_PUBLIC_URL_INVENTARIO_DEPORTE:      process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE,
     NEXT_PUBLIC_URL_ASISTENCIAS:             process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
+    NEXT_PUBLIC_URL_CANAL_COMUNICACIONES:    process.env.NEXT_PUBLIC_URL_CANAL_COMUNICACIONES,
   } as Record<string, string | undefined>)[p.envKey],
 }))
 

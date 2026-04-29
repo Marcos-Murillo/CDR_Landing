@@ -9,6 +9,7 @@ const ALL_MODULES = [
   { id: 'bitacora_comunicaciones', name: 'Bitácora COM', description: 'Registro y seguimiento de actividades del área de comunicaciones de la sección.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES || '#', icon: 'clipboard' },
   { id: 'stock_cultura', name: 'Stock Cultura', description: 'Gestión de inventario de instrumentos, materiales y recursos del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA || '#', icon: 'box' },
   { id: 'horarios', name: 'Horarios Cultura', description: 'Consulta de horarios de grupos culturales: danza, musica, teatro y mas.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_HORARIOS || '#', icon: 'calendar' },
+  { id: 'canal_comunicaciones', name: 'Canal Comunicaciones', description: 'Gestión de peticiones y eventos del canal de comunicaciones del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_CANAL_COMUNICACIONES || '#', icon: 'clipboard' },
   { id: 'stock_cdu', name: 'Stock CDU', description: 'Inventario deportivo con registro de usuarios, préstamos de equipos y reportes del Centro Deportivo.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE || '#', icon: 'box' },
   { id: 'horarios_cdu', name: 'Horarios CDU', description: 'Consulta de horarios de grupos y disciplinas deportivas del Centro Deportivo Universitario.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_HORARIOS_CDU || '#', icon: 'calendar' },
   { id: 'gym_cdu', name: 'GymControl CDU', description: 'Registro y control de acceso a las instalaciones del gimnasio del Centro Deportivo.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_GYM_CDU || '#', icon: 'trophy' },
@@ -20,6 +21,7 @@ const SSO_PLATFORMS: Record<string, string> = {
   bitacoraac: '/admin', bitacora_comunicaciones: '/admin',
   stock_cdu: '/', stock_cultura: '/', horarios: '/adofi', horarios_cdu: '/adofi', gym_cdu: '/admin',
   asistencias_cultura: '/usuarios', asistencias_deporte: '/usuarios',
+  canal_comunicaciones: '/login',
 }
 
 function ArrowRightIcon() {

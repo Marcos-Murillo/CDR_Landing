@@ -51,6 +51,11 @@ const ROLE_MAP: Record<string, Record<string, string>> = {
     monitor: 'MONITOR',
     superadmin: 'SUPER_ADMIN',
   },
+  canal_comunicaciones: {
+    admin: 'admin',
+    monitor: 'manager',
+    superadmin: 'superadmin',
+  },
 }
 
 // Redirect path after SSO login per platform
