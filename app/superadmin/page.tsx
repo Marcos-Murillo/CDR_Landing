@@ -37,8 +37,11 @@ const PLATFORMS = [
   } as Record<string, string | undefined>)[p.envKey],
 }))
 
+// Platforms that require a specific role override (independent of global role)
+const PLATFORM_ROLE_OVERRIDES: string[] = ['canal_comunicaciones']
+
 type NewUserRole = 'admin' | 'monitor'
-type UserArea   = 'cultura' | 'deporte' | 'all'
+type UserArea    = 'cultura' | 'deporte' | 'all'
 
 interface CreatedUser {
   id: string
@@ -47,6 +50,7 @@ interface CreatedUser {
   role: NewUserRole
   area: UserArea
   platforms: string[]
+  platformRoles?: Record<string, string>
   createdAt: string
 }
 
@@ -173,6 +177,7 @@ export default function SuperAdminPage() {
   const [role, setRole]               = useState<NewUserRole>('monitor')
   const [area, setArea]               = useState<UserArea>('cultura')
   const [platforms, setPlatforms]     = useState<string[]>([])
+  const [platformRoles, setPlatformRoles] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Edit
@@ -181,6 +186,7 @@ export default function SuperAdminPage() {
   const [editRole, setEditRole]             = useState<NewUserRole>('monitor')
   const [editArea, setEditArea]             = useState<UserArea>('cultura')
   const [editPlatforms, setEditPlatforms]   = useState<string[]>([])
+  const [editPlatformRoles, setEditPlatformRoles] = useState<Record<string, string>>({})
   const [isEditSubmitting, setIsEditSubmitting] = useState(false)
   const [editError, setEditError]           = useState('')
   const [openDropdown, setOpenDropdown]     = useState<string | null>(null)
@@ -209,7 +215,7 @@ export default function SuperAdminPage() {
 
   const handleSignOut = async () => { sessionStorage.removeItem('superadmin_auth'); await signOut(auth); router.push('/login') }
 
-  const resetForm = () => { setDisplayName(''); setEmail(''); setPassword(''); setRole('monitor'); setArea('cultura'); setPlatforms([]); setError('') }
+  const resetForm = () => { setDisplayName(''); setEmail(''); setPassword(''); setRole('monitor'); setArea('cultura'); setPlatforms([]); setPlatformRoles({}); setError('') }
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault(); setError(''); setSuccess('')
@@ -218,7 +224,7 @@ export default function SuperAdminPage() {
     if (platforms.length === 0) { setError('Selecciona al menos una plataforma.'); return }
     setIsSubmitting(true)
     try {
-      const res  = await fetch('/api/users/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), password, displayName: displayName.trim(), role, area, platforms }) })
+      const res  = await fetch('/api/users/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), password, displayName: displayName.trim(), role, area, platforms, platformRoles }) })
       const data = await res.json()
       if (!res.ok) { setError(data.error ?? 'Error al crear el usuario.'); return }
       setSuccess(`Usuario "${displayName}" creado correctamente.`)
@@ -235,12 +241,12 @@ export default function SuperAdminPage() {
     } catch { setError('Error al eliminar el usuario.') }
   }
 
-  const openEdit = (u: CreatedUser) => { setEditingUser(u); setEditDisplayName(u.displayName); setEditRole(u.role); setEditArea(u.area); setEditPlatforms(u.platforms); setEditError(''); setOpenDropdown(null) }
+  const openEdit = (u: CreatedUser) => { setEditingUser(u); setEditDisplayName(u.displayName); setEditRole(u.role); setEditArea(u.area); setEditPlatforms(u.platforms); setEditPlatformRoles(u.platformRoles ?? {}); setEditError(''); setOpenDropdown(null) }
 
   const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault(); if (!editingUser) return; setEditError(''); setIsEditSubmitting(true)
     try {
-      const res  = await fetch('/api/users/update', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: editingUser.id, displayName: editDisplayName.trim(), role: editRole, area: editArea, platforms: editPlatforms }) })
+      const res  = await fetch('/api/users/update', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: editingUser.id, displayName: editDisplayName.trim(), role: editRole, area: editArea, platforms: editPlatforms, platformRoles: editPlatformRoles }) })
       const data = await res.json()
       if (!res.ok) { setEditError(data.error ?? 'Error al actualizar.'); return }
       setSuccess(`Usuario "${editDisplayName}" actualizado.`); setEditingUser(null); fetchUsers()
@@ -454,6 +460,24 @@ export default function SuperAdminPage() {
                   })}
                 </div>
               </div>
+              {/* Role overrides for platforms that need it */}
+              {PLATFORM_ROLE_OVERRIDES.filter((pid) => platforms.includes(pid)).map((pid) => {
+                const plat = PLATFORMS.find((p) => p.id === pid)
+                return (
+                  <div key={pid} className={styles.inputGroup}>
+                    <label className={styles.label}>Rol en {plat?.name}</label>
+                    <select
+                      value={platformRoles[pid] ?? 'manager'}
+                      onChange={(e) => setPlatformRoles((prev) => ({ ...prev, [pid]: e.target.value }))}
+                      className={styles.select}
+                      disabled={isSubmitting}
+                    >
+                      <option value="manager">Monitor</option>
+                      <option value="admin">Administrador</option>
+                    </select>
+                  </div>
+                )
+              })}
               <div className={styles.drawerActions}>
                 <button type="button" className={styles.cancelButton} onClick={() => { setShowForm(false); resetForm() }} disabled={isSubmitting}>Cancelar</button>
                 <button type="submit" className={styles.submitButton} disabled={isSubmitting}>{isSubmitting ? 'Creando...' : 'Crear usuario'}</button>
@@ -523,6 +547,24 @@ export default function SuperAdminPage() {
                   })}
                 </div>
               </div>
+              {/* Role overrides for platforms that need it */}
+              {PLATFORM_ROLE_OVERRIDES.filter((pid) => editPlatforms.includes(pid)).map((pid) => {
+                const plat = PLATFORMS.find((p) => p.id === pid)
+                return (
+                  <div key={pid} className={styles.inputGroup}>
+                    <label className={styles.label}>Rol en {plat?.name}</label>
+                    <select
+                      value={editPlatformRoles[pid] ?? 'manager'}
+                      onChange={(e) => setEditPlatformRoles((prev) => ({ ...prev, [pid]: e.target.value }))}
+                      className={styles.select}
+                      disabled={isEditSubmitting}
+                    >
+                      <option value="manager">Monitor</option>
+                      <option value="admin">Administrador</option>
+                    </select>
+                  </div>
+                )
+              })}
               <div className={styles.drawerActions}>
                 <button type="button" className={styles.cancelButton} onClick={() => setEditingUser(null)} disabled={isEditSubmitting}>Cancelar</button>
                 <button type="submit" className={styles.submitButton} disabled={isEditSubmitting}>{isEditSubmitting ? 'Guardando...' : 'Guardar cambios'}</button>

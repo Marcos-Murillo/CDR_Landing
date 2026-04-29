@@ -15,6 +15,7 @@ export async function GET() {
           role: data.role ?? '',
           area: data.area ?? '',
           platforms: data.platforms ?? [],
+          platformRoles: data.platformRoles ?? {},
           createdAt: data.createdAt?.toDate?.()?.toISOString().split('T')[0] ?? '—',
         }
       })

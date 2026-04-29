@@ -4,26 +4,21 @@ import { adminAuth, adminDb } from '@/lib/firebase-admin'
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, displayName, role, area, platforms } = await req.json()
+    const { email, password, displayName, role, area, platforms, platformRoles } = await req.json()
 
     if (!email || !password || !displayName || !role || !area || !platforms) {
       return NextResponse.json({ error: 'Faltan campos requeridos.' }, { status: 400 })
     }
 
-    // Create user in Firebase Auth using Admin SDK (does NOT change current session)
-    const userRecord = await adminAuth.createUser({
-      email,
-      password,
-      displayName,
-    })
+    const userRecord = await adminAuth.createUser({ email, password, displayName })
 
-    // Save profile in Firestore
     await adminDb.collection('users').doc(userRecord.uid).set({
       email,
       displayName,
       role,
       area,
       platforms,
+      platformRoles: platformRoles ?? {},
       createdAt: FieldValue.serverTimestamp(),
       createdBy: 'superadmin',
     })

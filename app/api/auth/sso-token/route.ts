@@ -141,7 +141,8 @@ export async function POST(req: NextRequest) {
     }
 
     const platformRoles = ROLE_MAP[platform] ?? ROLE_MAP['bitacoraac']
-    const mappedRole = platformRoles[profile.role] ?? 'guest'
+    // Use platform-specific role override if set, otherwise fall back to global role mapping
+    const mappedRole = (profile.platformRoles?.[platform]) ?? platformRoles[profile.role] ?? 'guest'
 
     // For gym_cdu monitors, map area to espacio
     const espacio = mappedRole === 'monitor'
