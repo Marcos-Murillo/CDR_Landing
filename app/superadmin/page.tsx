@@ -156,6 +156,7 @@ export default function SuperAdminPage() {
     stock_cultura: '/', horarios: '/adofi',
     stock_cdu: '/superadmin', horarios_cdu: '/adofi', gym_cdu: '/admin',
     asistencias_cultura: '/super-admin', asistencias_deporte: '/super-admin',
+    canal_comunicaciones: '',
   }
 
   const handleOpenPlatform = async (platformId: string) => {
