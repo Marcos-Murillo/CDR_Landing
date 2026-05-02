@@ -16,6 +16,7 @@ const PLATFORMS = [
     description: 'Registro de actividades, seguimiento de tareas y control de asistencia de monitores del área de cultura.',
     area: 'cultura',
     tags: ['Actividades', 'Asistencia', 'Monitores'],
+    url: process.env.NEXT_PUBLIC_URL_BITACORA ?? '/login',
   },
   {
     id: 'bitacora_comunicaciones',
@@ -23,6 +24,7 @@ const PLATFORMS = [
     description: 'Registro y seguimiento de actividades del área de comunicaciones de la sección.',
     area: 'cultura',
     tags: ['Comunicaciones', 'Registros', 'Seguimiento'],
+    url: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES ?? '/login',
   },
   {
     id: 'stock_cultura',
@@ -30,6 +32,7 @@ const PLATFORMS = [
     description: 'Gestión de inventario de instrumentos, materiales y recursos del área cultural.',
     area: 'cultura',
     tags: ['Inventario', 'Instrumentos', 'Recursos'],
+    url: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA ?? '/login',
   },
   {
     id: 'horarios',
@@ -37,6 +40,7 @@ const PLATFORMS = [
     description: 'Consulta pública de horarios de grupos culturales: danza, música, teatro y más.',
     area: 'cultura',
     tags: ['Horarios', 'Grupos', 'Espacios'],
+    url: process.env.NEXT_PUBLIC_URL_HORARIOS ?? '/login',
   },
   {
     id: 'asistencias',
@@ -44,6 +48,7 @@ const PLATFORMS = [
     description: 'Sistema multi-área de inscripciones, asistencia con QR, estadísticas y reportes para cultura y deporte.',
     area: 'all',
     tags: ['Inscripciones', 'QR', 'Estadísticas'],
+    url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS ?? '/login',
   },
   {
     id: 'stock_cdu',
@@ -51,6 +56,7 @@ const PLATFORMS = [
     description: 'Inventario deportivo con registro de usuarios, préstamos de equipos y reportes del Centro Deportivo.',
     area: 'deporte',
     tags: ['Préstamos', 'Inventario', 'Reportes'],
+    url: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE ?? '/login',
   },
   {
     id: 'horarios_cdu',
@@ -58,6 +64,7 @@ const PLATFORMS = [
     description: 'Consulta de horarios de grupos y disciplinas deportivas del Centro Deportivo Universitario.',
     area: 'deporte',
     tags: ['Horarios', 'Deportes', 'CDU'],
+    url: process.env.NEXT_PUBLIC_URL_HORARIOS_CDU ?? '/login',
   },
   {
     id: 'gym_cdu',
@@ -65,6 +72,15 @@ const PLATFORMS = [
     description: 'Registro y control de acceso a las instalaciones del gimnasio del Centro Deportivo.',
     area: 'deporte',
     tags: ['Gimnasio', 'Registro', 'Acceso'],
+    url: process.env.NEXT_PUBLIC_URL_GYM_CDU ?? '/login',
+  },
+  {
+    id: 'bitacora_cdu',
+    name: 'Bitácora CDU',
+    description: 'Registro de actividades, seguimiento de tareas y gestión de estados para monitores del área de deporte.',
+    area: 'deporte',
+    tags: ['Actividades', 'Tareas', 'Monitores'],
+    url: process.env.NEXT_PUBLIC_URL_BITACORA_CDU ?? process.env.NEXT_PUBLIC_URL_BITACORA ?? '/login',
   },
 ]
 
@@ -224,7 +240,7 @@ export default function LandingPage() {
             </div>
             <div className={`${styles.heroStats} animate-fadeUp delay-4`}>
               <div className={styles.stat}>
-                <span className={styles.statValue}>8</span>
+                <span className={styles.statValue}>9</span>
                 <span className={styles.statLabel}>Aplicaciones</span>
               </div>
               <div className={styles.stat}>
@@ -427,7 +443,7 @@ export default function LandingPage() {
                 backContent={
                   <div className={styles.flipBack}>
                     <p className={styles.flipBackDesc}>{platform.description}</p>
-                    <Link href="/login" className={styles.flipBackBtn}>
+                    <Link href={platform.url} className={styles.flipBackBtn}>
                       Acceder <ArrowRightIcon />
                     </Link>
                   </div>
