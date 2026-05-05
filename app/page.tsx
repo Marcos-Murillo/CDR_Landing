@@ -12,7 +12,7 @@ import styles from './page.module.css'
 const PLATFORMS = [
   {
     id: 'bitacoraac',
-    name: 'Bitácora AC',
+    name: 'Bitácora',
     description: 'Registro de actividades, seguimiento de tareas y control de asistencia de monitores del área de cultura.',
     area: 'cultura',
     tags: ['Actividades', 'Asistencia', 'Monitores'],

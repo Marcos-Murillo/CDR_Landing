@@ -5,7 +5,7 @@ import { GlowingButton } from '@/components/ui/glowing-button'
 import styles from './plataformas.module.css'
 
 const ALL_MODULES = [
-  { id: 'bitacoraac', name: 'Bitácora AC', description: 'Registro de actividades, seguimiento de tareas y control de asistencia de monitores del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_BITACORA || '#', icon: 'clipboard' },
+  { id: 'bitacoraac', name: 'Bitácora', description: 'Registro de actividades, seguimiento de tareas y control de asistencia de monitores del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_BITACORA || '#', icon: 'clipboard' },
   { id: 'bitacora_comunicaciones', name: 'Bitácora COM', description: 'Registro y seguimiento de actividades del área de comunicaciones de la sección.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES || '#', icon: 'clipboard' },
   { id: 'stock_cultura', name: 'Stock Cultura', description: 'Gestión de inventario de instrumentos, materiales y recursos del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA || '#', icon: 'box' },
   { id: 'horarios', name: 'Horarios Cultura', description: 'Consulta de horarios de grupos culturales: danza, musica, teatro y mas.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_HORARIOS || '#', icon: 'calendar' },
