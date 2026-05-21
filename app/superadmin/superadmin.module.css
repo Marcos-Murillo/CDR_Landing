@@ -103,6 +103,52 @@
   background: rgba(255,255,255,0.07);
 }
 
+.sidebarNavItemActive {
+  background: rgba(37, 99, 235, 0.25);
+}
+
+.sidebarNavItemActive .sidebarNavDot {
+  background: #60a5fa;
+}
+
+.sidebarNavItemActive .sidebarNavName {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.topbarMain {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.topbarActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.superadminBackLink {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  width: fit-content;
+  transition: background 0.15s;
+}
+
+.superadminBackLink:hover {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
 .sidebarNavItem:hover .sidebarNavExt {
   opacity: 1;
 }
