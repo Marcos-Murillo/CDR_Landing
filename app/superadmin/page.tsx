@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { SuperadminSidebar } from '@/components/superadmin-sidebar'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuth } from '@/hoocks/use-auth'
+import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
 import LogoIcon from '@/components/logo-icon'
 import { GlowingButton } from '@/components/ui/glowing-button'
 import { GradientSlideButton } from '@/components/ui/gradient-slide-button'
@@ -149,6 +151,7 @@ export default function SuperAdminPage() {
     gym_cdu:                 process.env.NEXT_PUBLIC_URL_GYM_CDU ?? '',
     asistencias_cultura:     process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
     asistencias_deporte:     process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
+    prestamos_escenarios:    PRESTAMOS_ESCENARIOS_BASE_URL,
   }
 
   const SSO_REDIRECT: Record<string, string> = {
@@ -157,6 +160,7 @@ export default function SuperAdminPage() {
     stock_cdu: '/superadmin', horarios_cdu: '/adofi', gym_cdu: '/admin',
     asistencias_cultura: '/super-admin', asistencias_deporte: '/super-admin',
     canal_comunicaciones: '',
+    prestamos_escenarios: '/superadmin',
   }
 
   const handleOpenPlatform = async (platformId: string) => {
@@ -267,53 +271,7 @@ export default function SuperAdminPage() {
   return (
     <div className={styles.page}>
 
-      {/* ── SIDEBAR ── */}
-      <aside className={styles.sidebar}>
-        <div className={styles.sidebarTop}>
-          <Link href="/" className={styles.sidebarLogo}>
-            <LogoIcon size={40} />
-            <div>
-              <div className={styles.sidebarLogoName}>CampusFlow</div>
-              <div className={styles.sidebarLogoTag}>Super Admin</div>
-            </div>
-          </Link>
-
-          <div className={styles.sidebarDivider} />
-
-          <span className={styles.sidebarSectionLabel}>Plataformas</span>
-
-          {['Cultura', 'Deporte', 'Transversal'].map((group) => {
-            const items = PLATFORMS.filter((p) => p.area === group && p.available)
-            if (!items.length) return null
-            return (
-              <div key={group} className={styles.sidebarGroup}>
-                <span className={styles.sidebarGroupLabel}>{group}</span>
-                {items.map((p) => (
-                  <GlowingButton key={p.id} glowColor="#2563EB" className={styles.sidebarNavItem} onClick={() => handleOpenPlatform(p.id)}>
-                    <span className={styles.sidebarNavDot} />
-                    <span className={styles.sidebarNavName}>{p.name}</span>
-                    <span className={styles.sidebarNavExt}><ExternalIcon /></span>
-                  </GlowingButton>
-                ))}
-              </div>
-            )
-          })}
-        </div>
-
-        <div className={styles.sidebarBottom}>
-          <div className={styles.sidebarUserChip}>
-            <div className={styles.sidebarAvatar}>SA</div>
-            <div className={styles.sidebarUserInfo}>
-              <span className={styles.sidebarUserName}>Super Admin</span>
-              <span className={styles.sidebarUserRole}>Acceso total</span>
-            </div>
-          </div>
-          <button onClick={handleSignOut} className={styles.sidebarSignOut} aria-label="Salir">
-            <LogOutIcon />
-          </button>
-        </div>
-      </aside>
-
+      <SuperadminSidebar />
       {/* ── CONTENT ── */}
       <div className={styles.content}>
 

@@ -1,5 +1,6 @@
 "use client"
 
+import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
 import { useAuth } from '@/hoocks/use-auth'
 import { GlowingButton } from '@/components/ui/glowing-button'
 import styles from './plataformas.module.css'
@@ -15,6 +16,7 @@ const ALL_MODULES = [
   { id: 'gym_cdu', name: 'GymControl CDU', description: 'Registro y control de acceso a las instalaciones del gimnasio del Centro Deportivo.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_GYM_CDU || '#', icon: 'trophy' },
   { id: 'asistencias_cultura', name: 'Asistencias Cultura', description: 'Inscripciones, asistencia con QR, estadísticas y reportes del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app', icon: 'chart' },
   { id: 'asistencias_deporte', name: 'Asistencias Deporte', description: 'Inscripciones, asistencia con QR, estadísticas y reportes del área deportiva.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app', icon: 'chart' },
+  { id: 'prestamos_escenarios', name: 'Préstamos Escenarios', description: 'Reserva y administración de canchas y escenarios deportivos del CDU.', area: 'deporte', url: PRESTAMOS_ESCENARIOS_BASE_URL, icon: 'trophy' },
 ]
 
 const SSO_PLATFORMS: Record<string, string> = {
@@ -22,6 +24,7 @@ const SSO_PLATFORMS: Record<string, string> = {
   stock_cdu: '/', stock_cultura: '/', horarios: '/adofi', horarios_cdu: '/adofi', gym_cdu: '/admin',
   asistencias_cultura: '/usuarios', asistencias_deporte: '/usuarios',
   canal_comunicaciones: '/login',
+  prestamos_escenarios: '/admin',
 }
 
 function ArrowRightIcon() {
@@ -82,6 +85,9 @@ export default function PlataformasPage() {
       if (user.platforms.includes(m.id)) return true
       return (m.id === 'horarios' && user.area === 'cultura') ||
              (m.id === 'horarios_cdu' && user.area === 'deporte')
+    }
+    if (m.id === 'prestamos_escenarios') {
+      return user.area === 'deporte' || user.area === 'all' || user.platforms.includes(m.id)
     }
     return user.platforms.includes(m.id)
   })

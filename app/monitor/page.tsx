@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuth } from '@/hoocks/use-auth'
+import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
 import LogoIcon from '@/components/logo-icon'
 import styles from './monitor.module.css'
 
@@ -100,6 +101,16 @@ const ALL_MODULES = [
     icon: 'chart',
     color: 'violet',
   },
+  {
+    id: 'prestamos_escenarios',
+    name: 'Préstamos Escenarios',
+    description: 'Reserva de canchas y escenarios deportivos del Centro Deportivo Universitario.',
+    area: 'deporte',
+    url: PRESTAMOS_ESCENARIOS_BASE_URL,
+    sso: true,
+    icon: 'trophy',
+    color: 'green',
+  },
 ]
 
 const SSO_REDIRECT: Record<string, string> = {
@@ -112,6 +123,7 @@ const SSO_REDIRECT: Record<string, string> = {
   gym_cdu: '/admin',
   asistencias_cultura: '/estadisticas',
   asistencias_deporte: '/estadisticas',
+  prestamos_escenarios: '/admin',
 }
 
 function ModuleIcon({ type }: { type: string }) {
@@ -235,6 +247,9 @@ export default function MonitorPage() {
       if (user.area === 'all') return true
       if (user.platforms.includes(m.id)) return true
       return m.id === `asistencias_${user.area}`
+    }
+    if (m.id === 'prestamos_escenarios') {
+      return user.area === 'deporte' || user.area === 'all' || user.platforms.includes(m.id)
     }
     return user.platforms.includes(m.id)
   })
