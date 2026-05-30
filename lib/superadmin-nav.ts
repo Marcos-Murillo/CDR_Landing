@@ -1,4 +1,5 @@
 export const SUPERADMIN_NAV = [
+  { href: '/', label: 'Página principal', exact: true },
   { href: '/superadmin', label: 'Gestión de usuarios', exact: true },
   { href: '/superadmin/personas', label: 'Vista 360°', exact: false },
 ] as const

@@ -1,4 +1,5 @@
 import { PRESTAMOS_ESCENARIOS_BASE_URL } from './prestamos-escenarios-url'
+import { STOCK_CDU_SANFER_BASE_URL } from './stock-cdu-sanfer-url'
 
 export const SUPERADMIN_PLATFORMS = [
   { id: 'bitacoraac', name: 'Bitácora AC', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_BITACORA' },
@@ -24,6 +25,7 @@ export const SUPERADMIN_PLATFORMS = [
       NEXT_PUBLIC_URL_HORARIOS_CDU: process.env.NEXT_PUBLIC_URL_HORARIOS_CDU,
       NEXT_PUBLIC_URL_GYM_CDU: process.env.NEXT_PUBLIC_URL_GYM_CDU,
       NEXT_PUBLIC_URL_INVENTARIO_DEPORTE: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE,
+      NEXT_PUBLIC_URL_STOCK_CDU_SANFER: STOCK_CDU_SANFER_BASE_URL,
       NEXT_PUBLIC_URL_ASISTENCIAS:
         process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
       NEXT_PUBLIC_URL_CANAL_COMUNICACIONES: process.env.NEXT_PUBLIC_URL_CANAL_COMUNICACIONES,
@@ -38,7 +40,7 @@ export const SUPERADMIN_PLATFORM_URLS: Record<string, string> = {
   stock_cultura: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA ?? '',
   horarios: process.env.NEXT_PUBLIC_URL_HORARIOS ?? '',
   stock_cdu: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE ?? '',
-  stock_cdu_sanfer: process.env.NEXT_PUBLIC_URL_STOCK_CDU_SANFER ?? '',
+  stock_cdu_sanfer: STOCK_CDU_SANFER_BASE_URL,
   horarios_cdu: process.env.NEXT_PUBLIC_URL_HORARIOS_CDU ?? '',
   gym_cdu: process.env.NEXT_PUBLIC_URL_GYM_CDU ?? '',
   asistencias_cultura:

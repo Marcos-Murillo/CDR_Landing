@@ -8,6 +8,7 @@ import { signOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuth } from '@/hoocks/use-auth'
 import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
+import { STOCK_CDU_SANFER_BASE_URL } from '@/lib/stock-cdu-sanfer-url'
 import LogoIcon from '@/components/logo-icon'
 import { GlowingButton } from '@/components/ui/glowing-button'
 import { GradientSlideButton } from '@/components/ui/gradient-slide-button'
@@ -35,7 +36,7 @@ const PLATFORMS = [
     NEXT_PUBLIC_URL_HORARIOS_CDU:            process.env.NEXT_PUBLIC_URL_HORARIOS_CDU,
     NEXT_PUBLIC_URL_GYM_CDU:                 process.env.NEXT_PUBLIC_URL_GYM_CDU,
     NEXT_PUBLIC_URL_INVENTARIO_DEPORTE:      process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE,
-    NEXT_PUBLIC_URL_STOCK_CDU_SANFER:        process.env.NEXT_PUBLIC_URL_STOCK_CDU_SANFER,
+    NEXT_PUBLIC_URL_STOCK_CDU_SANFER:        STOCK_CDU_SANFER_BASE_URL,
     NEXT_PUBLIC_URL_ASISTENCIAS:             process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
     NEXT_PUBLIC_URL_CANAL_COMUNICACIONES:    process.env.NEXT_PUBLIC_URL_CANAL_COMUNICACIONES,
   } as Record<string, string | undefined>)[p.envKey],
@@ -149,7 +150,7 @@ export default function SuperAdminPage() {
     stock_cultura:           process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA ?? '',
     horarios:                process.env.NEXT_PUBLIC_URL_HORARIOS ?? '',
     stock_cdu:               process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE ?? '',
-    stock_cdu_sanfer:        process.env.NEXT_PUBLIC_URL_STOCK_CDU_SANFER ?? '',
+    stock_cdu_sanfer:        STOCK_CDU_SANFER_BASE_URL,
     horarios_cdu:            process.env.NEXT_PUBLIC_URL_HORARIOS_CDU ?? '',
     gym_cdu:                 process.env.NEXT_PUBLIC_URL_GYM_CDU ?? '',
     asistencias_cultura:     process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
