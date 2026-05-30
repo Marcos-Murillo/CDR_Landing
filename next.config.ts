@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ['firebase-admin', 'jsonwebtoken'],
+  serverExternalPackages: ['firebase-admin', 'jsonwebtoken', 'jspdf'],
 };
 
 export default nextConfig;

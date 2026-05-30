@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminAuth } from '@/lib/firebase-admin'
 import { getStockCduDb } from '@/lib/firebase-stock-cdu-admin'
-import { computeStockCduSummary } from './compute'
+import { fetchStockCduDashboardSummary } from '@/lib/platform-summary/fetch-stock-dashboard'
+import {
+  fallbackToPersistedOnQuota,
+  getPlatformSummaryCached,
+} from '@/lib/platform-summary/cache'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const authHeader = request.headers.get('authorization') ?? ''
@@ -11,43 +15,23 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   try { await adminAuth.verifyIdToken(idToken) }
   catch { return NextResponse.json({ error: 'Token inválido.' }, { status: 401 }) }
 
+  const forceRefresh = request.nextUrl.searchParams.get('refresh') === '1'
+  const cacheKey = 'stock_cdu'
+
   try {
-    const db = getStockCduDb()
-    const [loansSnap, inventorySnap, damagesSnap] = await Promise.all([
-      db.collection('loans').get(),
-      db.collection('inventory').get(),
-      db.collection('damageReports').get(),
-    ])
-
-    const loans = loansSnap.docs.map(d => {
-      const data = d.data()
-      return {
-        loanDate: data.loanDate?.toDate?.() ?? new Date(data.loanDate),
-        returnDate: data.returnDate?.toDate?.(),
-        status: data.status as 'active' | 'returned',
-        itemId: data.itemId ?? '',
-        itemName: data.itemName ?? '',
-        facultad: data.facultad,
-        programa: data.programa,
-        genero: data.genero,
-        estamento: data.estamento,
-      }
-    })
-
-    const items = inventorySnap.docs.map(d => {
-      const data = d.data()
-      return { id: d.id, name: data.name ?? '', status: data.status as 'available' | 'loaned' | 'removed' }
-    })
-
-    const damages = damagesSnap.docs.map(d => {
-      const data = d.data()
-      return { itemId: data.itemId ?? '', itemName: data.itemName ?? '', severity: data.severity as 'low' | 'medium' | 'high' }
-    })
-
-    return NextResponse.json(computeStockCduSummary(loans, items, damages))
+    const summary = await getPlatformSummaryCached(
+      cacheKey,
+      () => fetchStockCduDashboardSummary(getStockCduDb()),
+      { forceRefresh },
+    )
+    return NextResponse.json(summary)
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     console.error('[stock-cdu-summary]', msg)
+
+    const stale = await fallbackToPersistedOnQuota(cacheKey, err)
+    if (stale) return NextResponse.json(stale)
+
     if (msg.includes('RESOURCE_EXHAUSTED') || msg.includes('Quota')) {
       return NextResponse.json(getMockData())
     }

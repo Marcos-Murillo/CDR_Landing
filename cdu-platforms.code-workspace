@@ -1,0 +1,17 @@
+{
+  "folders": [
+    { "path": "." },
+    { "path": "../CDU/stock_cdu_Sanfer" },
+    { "path": "../CDU/stock_cdu" },
+    { "path": "../CDU/gym_cdu" },
+    { "path": "../CDU/prestamos_escenarios" },
+    { "path": "../CDU/horarios_CDU" },
+    { "path": "../CDU/seguimiento_contratistas" },
+    { "path": "../canal_comunicaciones" },
+    { "path": "../bitacoraac" },
+    { "path": "../asistencias_area" }
+  ],
+  "settings": {
+    "typescript.autoClosingTags": false
+  }
+}

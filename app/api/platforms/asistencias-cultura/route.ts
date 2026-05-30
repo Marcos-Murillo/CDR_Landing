@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminAuth } from '@/lib/firebase-admin'
 import { getAsistenciasDb } from '@/lib/firebase-asistencias-admin'
-import { computeDashboardSummary } from '@/lib/asistencias-compute'
+import { fetchAsistenciasDashboardSummary } from '@/lib/platform-summary/fetch-asistencias-dashboard'
+import {
+  fallbackToPersistedOnQuota,
+  getPlatformSummaryCached,
+} from '@/lib/platform-summary/cache'
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization') ?? ''
@@ -17,36 +21,23 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Token de sesión inválido.' }, { status: 401 })
   }
 
+  const forceRefresh = request.nextUrl.searchParams.get('refresh') === '1'
+  const cacheKey = 'asistencias_cultura'
+
   try {
-    const db = getAsistenciasDb()
-    const [usersSnap, attendanceSnap, groupsSnap] = await Promise.all([
-      db.collection('user_profiles').get(),
-      db.collection('attendance_records').get(),
-      db.collection('cultural_groups').get(),
-    ])
-
-    const userMap = new Map<string, { genero: string; estamento: string; numeroDocumento: string }>()
-    usersSnap.forEach(doc => {
-      const d = doc.data()
-      userMap.set(doc.id, { genero: d.genero ?? 'OTRO', estamento: d.estamento ?? 'INVITADO', numeroDocumento: d.numeroDocumento ?? doc.id })
-    })
-
-    const records: Array<{ timestamp: Date; genero: 'MUJER' | 'HOMBRE' | 'OTRO'; estamento: string; numeroDocumento: string; grupoCultural: string }> = []
-    attendanceSnap.forEach(doc => {
-      const d = doc.data()
-      const user = userMap.get(d.userId)
-      if (!user) return
-      const ts: Date = d.timestamp?.toDate?.() ?? new Date(d.timestamp)
-      if (!ts || isNaN(ts.getTime())) return
-      const g = user.genero.toUpperCase()
-      records.push({ timestamp: ts, genero: g === 'MUJER' ? 'MUJER' : g === 'HOMBRE' ? 'HOMBRE' : 'OTRO', estamento: user.estamento, numeroDocumento: user.numeroDocumento, grupoCultural: d.grupoCultural ?? 'Sin grupo' })
-    })
-
-    const groups = groupsSnap.docs.map(doc => ({ id: doc.id, nombre: doc.data().nombre ?? doc.id, createdAt: new Date(), activo: true }))
-    return NextResponse.json(computeDashboardSummary(records, groups))
+    const summary = await getPlatformSummaryCached(
+      cacheKey,
+      () => fetchAsistenciasDashboardSummary(getAsistenciasDb()),
+      { forceRefresh },
+    )
+    return NextResponse.json(summary)
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     console.error('[asistencias-cultura] Error:', msg)
+
+    const stale = await fallbackToPersistedOnQuota(cacheKey, err)
+    if (stale) return NextResponse.json(stale)
+
     if (msg.includes('RESOURCE_EXHAUSTED') || msg.includes('Quota exceeded')) {
       return NextResponse.json(getMockSummary())
     }

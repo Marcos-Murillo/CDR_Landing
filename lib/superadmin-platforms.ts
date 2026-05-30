@@ -8,6 +8,7 @@ export const SUPERADMIN_PLATFORMS = [
   { id: 'asistencias_cultura', name: 'Asistencias', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
   { id: 'canal_comunicaciones', name: 'Canal Comunicaciones', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_CANAL_COMUNICACIONES' },
   { id: 'stock_cdu', name: 'Stock CDU', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_INVENTARIO_DEPORTE' },
+  { id: 'stock_cdu_sanfer', name: 'Stock CDU San Fernando', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_STOCK_CDU_SANFER' },
   { id: 'horarios_cdu', name: 'Horarios CDU', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_HORARIOS_CDU' },
   { id: 'gym_cdu', name: 'GymControl CDU', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_GYM_CDU' },
   { id: 'asistencias_deporte', name: 'Asistencias', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
@@ -37,6 +38,7 @@ export const SUPERADMIN_PLATFORM_URLS: Record<string, string> = {
   stock_cultura: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA ?? '',
   horarios: process.env.NEXT_PUBLIC_URL_HORARIOS ?? '',
   stock_cdu: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE ?? '',
+  stock_cdu_sanfer: process.env.NEXT_PUBLIC_URL_STOCK_CDU_SANFER ?? '',
   horarios_cdu: process.env.NEXT_PUBLIC_URL_HORARIOS_CDU ?? '',
   gym_cdu: process.env.NEXT_PUBLIC_URL_GYM_CDU ?? '',
   asistencias_cultura:
@@ -53,6 +55,7 @@ export const SUPERADMIN_SSO_REDIRECT: Record<string, string> = {
   stock_cultura: '/',
   horarios: '/adofi',
   stock_cdu: '/superadmin',
+  stock_cdu_sanfer: '/superadmin',
   horarios_cdu: '/adofi',
   gym_cdu: '/admin',
   asistencias_cultura: '/super-admin',

@@ -59,6 +59,14 @@ const PLATFORMS = [
     url: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE ?? '/login',
   },
   {
+    id: 'stock_cdu_sanfer',
+    name: 'Stock CDU San Fernando',
+    description: 'Préstamo de implementos deportivos en la sede San Fernando. Usuarios registrados en CDUControl.',
+    area: 'deporte',
+    tags: ['San Fernando', 'Préstamos', 'Implementos'],
+    url: process.env.NEXT_PUBLIC_URL_STOCK_CDU_SANFER ?? '/login',
+  },
+  {
     id: 'horarios_cdu',
     name: 'Horarios CDU',
     description: 'Consulta de horarios de grupos y disciplinas deportivas del Centro Deportivo Universitario.',

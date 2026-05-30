@@ -21,6 +21,11 @@ const ROLE_MAP: Record<string, Record<string, string>> = {
     monitor: 'monitor',
     superadmin: 'admin',
   },
+  stock_cdu_sanfer: {
+    admin: 'admin',
+    monitor: 'monitor',
+    superadmin: 'admin',
+  },
   stock_cultura: {
     admin: 'admin',
     monitor: 'monitor',
@@ -54,6 +59,11 @@ const ROLE_MAP: Record<string, Record<string, string>> = {
   canal_comunicaciones: {
     admin: 'admin',
     monitor: 'manager',
+    superadmin: 'superadmin',
+  },
+  prestamos_escenarios: {
+    admin: 'admin',
+    monitor: 'admin',
     superadmin: 'superadmin',
   },
 }
@@ -129,12 +139,17 @@ export async function POST(req: NextRequest) {
       (platform === 'horarios' && (profile.area === 'cultura' || profile.area === 'all')) ||
       (platform === 'horarios_cdu' && (profile.area === 'deporte' || profile.area === 'all'))
 
+    const isPrestamosPlatform = platform === 'prestamos_escenarios'
+    const areaMatchesPrestamos =
+      profile.area === 'deporte' || profile.area === 'all'
+
     const hasAccess =
       isSuperadmin ||
       profile.platforms?.includes(platform) ||
       profile.area === 'all' ||
       (isAsistenciasPlatform && areaMatchesAsistencias) ||
-      (isHorariosPlatform && areaMatchesHorarios)
+      (isHorariosPlatform && areaMatchesHorarios) ||
+      (isPrestamosPlatform && areaMatchesPrestamos)
 
     if (!hasAccess) {
       return NextResponse.json({ error: 'Sin acceso a esta plataforma.' }, { status: 403 })
