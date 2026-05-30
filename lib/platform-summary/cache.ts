@@ -65,7 +65,7 @@ export async function getPlatformSummaryCached<T>(
     console.warn(`[platform-summary/${key}] No se pudo persistir:`, err)
   }
 
-  return fresh
+  return fresh as CachedSummary<T>
 }
 
 export async function fallbackToPersistedOnQuota<T>(

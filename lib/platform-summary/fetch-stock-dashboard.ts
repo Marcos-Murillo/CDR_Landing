@@ -32,7 +32,7 @@ function mapLoan(data: FirebaseFirestore.DocumentData) {
     programa: data.programa as string | undefined,
     genero: data.genero as string | undefined,
     estamento: data.estamento as string | undefined,
-    culturalGroup: data.culturalGroup as string | undefined,
+    culturalGroup: String(data.culturalGroup ?? ''),
   }
 }
 
