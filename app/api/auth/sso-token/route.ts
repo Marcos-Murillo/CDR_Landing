@@ -164,21 +164,20 @@ export async function POST(req: NextRequest) {
       ? (AREA_TO_ESPACIO[profile.area] ?? 'gimnasio')
       : undefined
 
+    const tokenPayload: Record<string, unknown> = {
+      uid,
+      nombre: profile.displayName ?? firebaseUser.displayName ?? 'Usuario',
+      cedula: profile.cedula ?? uid,
+      role: mappedRole,   // used by bitacoraac
+      rol: mappedRole,    // used by gym_cdu
+      area: profile.area ?? 'cultura',
+      espacio,
+      platform,
+    }
+    if (profile.sede) tokenPayload.sede = profile.sede
+
     // Generate signed JWT valid for 2 minutes
-    const token = jwt.sign(
-      {
-        uid,
-        nombre: profile.displayName ?? firebaseUser.displayName ?? 'Usuario',
-        cedula: profile.cedula ?? uid,
-        role: mappedRole,   // used by bitacoraac
-        rol: mappedRole,    // used by gym_cdu
-        area: profile.area ?? 'cultura',
-        espacio,
-        platform,
-      },
-      SSO_SECRET,
-      { expiresIn: '2m' }
-    )
+    const token = jwt.sign(tokenPayload, SSO_SECRET, { expiresIn: '2m' })
 
     return NextResponse.json({ token })
   } catch (err) {

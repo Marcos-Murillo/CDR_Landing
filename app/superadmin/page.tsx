@@ -34,8 +34,12 @@ const PLATFORMS = [
 // Platforms that require a specific role override (independent of global role)
 const PLATFORM_ROLE_OVERRIDES: string[] = ['canal_comunicaciones']
 
+/** Plantilla rápida: admin deporte con acceso Gym + Stock San Fernando */
+const SANFER_ADMIN_PLATFORMS = ['gym_cdu', 'stock_cdu_sanfer'] as const
+
 type NewUserRole = 'admin' | 'monitor'
 type UserArea    = 'cultura' | 'deporte' | 'all'
+type StaffSede   = 'melendez' | 'san_fernando' | ''
 
 interface CreatedUser {
   id: string
@@ -45,6 +49,8 @@ interface CreatedUser {
   area: UserArea
   platforms: string[]
   platformRoles?: Record<string, string>
+  cedula?: string
+  sede?: string
   createdAt: string
 }
 
@@ -176,6 +182,8 @@ export default function SuperAdminPage() {
   const [area, setArea]               = useState<UserArea>('cultura')
   const [platforms, setPlatforms]     = useState<string[]>([])
   const [platformRoles, setPlatformRoles] = useState<Record<string, string>>({})
+  const [cedula, setCedula]           = useState('')
+  const [sede, setSede]               = useState<StaffSede>('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Edit
@@ -185,6 +193,8 @@ export default function SuperAdminPage() {
   const [editArea, setEditArea]             = useState<UserArea>('cultura')
   const [editPlatforms, setEditPlatforms]   = useState<string[]>([])
   const [editPlatformRoles, setEditPlatformRoles] = useState<Record<string, string>>({})
+  const [editCedula, setEditCedula]         = useState('')
+  const [editSede, setEditSede]             = useState<StaffSede>('')
   const [isEditSubmitting, setIsEditSubmitting] = useState(false)
   const [editError, setEditError]           = useState('')
   const [openDropdown, setOpenDropdown]     = useState<string | null>(null)
@@ -213,7 +223,26 @@ export default function SuperAdminPage() {
 
   const handleSignOut = async () => { sessionStorage.removeItem('superadmin_auth'); await signOut(auth); router.push('/login') }
 
-  const resetForm = () => { setDisplayName(''); setEmail(''); setPassword(''); setRole('monitor'); setArea('cultura'); setPlatforms([]); setPlatformRoles({}); setError('') }
+  const resetForm = () => {
+    setDisplayName('')
+    setEmail('')
+    setPassword('')
+    setRole('monitor')
+    setArea('cultura')
+    setPlatforms([])
+    setPlatformRoles({})
+    setCedula('')
+    setSede('')
+    setError('')
+  }
+
+  const applySanferAdminPreset = () => {
+    setRole('admin')
+    setArea('deporte')
+    setPlatforms([...SANFER_ADMIN_PLATFORMS])
+    setSede('san_fernando')
+    setError('')
+  }
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault(); setError(''); setSuccess('')
@@ -222,7 +251,7 @@ export default function SuperAdminPage() {
     if (platforms.length === 0) { setError('Selecciona al menos una plataforma.'); return }
     setIsSubmitting(true)
     try {
-      const res  = await fetch('/api/users/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), password, displayName: displayName.trim(), role, area, platforms, platformRoles }) })
+      const res  = await fetch('/api/users/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), password, displayName: displayName.trim(), role, area, platforms, platformRoles, cedula: cedula.trim() || undefined, sede: sede || undefined }) })
       const data = await res.json()
       if (!res.ok) { setError(data.error ?? 'Error al crear el usuario.'); return }
       setSuccess(`Usuario "${displayName}" creado correctamente.`)
@@ -239,12 +268,23 @@ export default function SuperAdminPage() {
     } catch { setError('Error al eliminar el usuario.') }
   }
 
-  const openEdit = (u: CreatedUser) => { setEditingUser(u); setEditDisplayName(u.displayName); setEditRole(u.role); setEditArea(u.area); setEditPlatforms(u.platforms); setEditPlatformRoles(u.platformRoles ?? {}); setEditError(''); setOpenDropdown(null) }
+  const openEdit = (u: CreatedUser) => {
+    setEditingUser(u)
+    setEditDisplayName(u.displayName)
+    setEditRole(u.role)
+    setEditArea(u.area)
+    setEditPlatforms(u.platforms)
+    setEditPlatformRoles(u.platformRoles ?? {})
+    setEditCedula(u.cedula ?? '')
+    setEditSede((u.sede as StaffSede) ?? '')
+    setEditError('')
+    setOpenDropdown(null)
+  }
 
   const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault(); if (!editingUser) return; setEditError(''); setIsEditSubmitting(true)
     try {
-      const res  = await fetch('/api/users/update', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: editingUser.id, displayName: editDisplayName.trim(), role: editRole, area: editArea, platforms: editPlatforms, platformRoles: editPlatformRoles }) })
+      const res  = await fetch('/api/users/update', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: editingUser.id, displayName: editDisplayName.trim(), role: editRole, area: editArea, platforms: editPlatforms, platformRoles: editPlatformRoles, cedula: editCedula.trim(), sede: editSede || null }) })
       const data = await res.json()
       if (!res.ok) { setEditError(data.error ?? 'Error al actualizar.'); return }
       setSuccess(`Usuario "${editDisplayName}" actualizado.`); setEditingUser(null); fetchUsers()
@@ -358,6 +398,17 @@ export default function SuperAdminPage() {
 
             {error && <div className={styles.errorAlert}><AlertIcon /><span>{error}</span></div>}
 
+            <div className={styles.drawerPresetRow}>
+              <button
+                type="button"
+                className={styles.presetButton}
+                onClick={applySanferAdminPreset}
+                disabled={isSubmitting}
+              >
+                Plantilla: Admin San Fernando (Gym + Stock)
+              </button>
+            </div>
+
             <form onSubmit={handleCreate} className={styles.drawerForm}>
               <div className={styles.inputGroup}>
                 <label className={styles.label}>Nombre completo</label>
@@ -370,6 +421,20 @@ export default function SuperAdminPage() {
               <div className={styles.inputGroup}>
                 <label className={styles.label}>Contraseña temporal</label>
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres" className={styles.input} disabled={isSubmitting} />
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>Cédula (SSO Gym / identificación)</label>
+                  <input type="text" value={cedula} onChange={(e) => setCedula(e.target.value)} placeholder="Ej. 1234567890" className={styles.input} disabled={isSubmitting} />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>Sede CDUControl</label>
+                  <select value={sede} onChange={(e) => setSede(e.target.value as StaffSede)} className={styles.select} disabled={isSubmitting}>
+                    <option value="">Sin sede fija</option>
+                    <option value="melendez">Meléndez</option>
+                    <option value="san_fernando">San Fernando</option>
+                  </select>
+                </div>
               </div>
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>
@@ -457,6 +522,20 @@ export default function SuperAdminPage() {
               <div className={styles.inputGroup}>
                 <label className={styles.label}>Nombre completo</label>
                 <input type="text" value={editDisplayName} onChange={(e) => setEditDisplayName(e.target.value)} className={styles.input} disabled={isEditSubmitting} />
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>Cédula</label>
+                  <input type="text" value={editCedula} onChange={(e) => setEditCedula(e.target.value)} className={styles.input} disabled={isEditSubmitting} />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>Sede CDUControl</label>
+                  <select value={editSede} onChange={(e) => setEditSede(e.target.value as StaffSede)} className={styles.select} disabled={isEditSubmitting}>
+                    <option value="">Sin sede fija</option>
+                    <option value="melendez">Meléndez</option>
+                    <option value="san_fernando">San Fernando</option>
+                  </select>
+                </div>
               </div>
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>

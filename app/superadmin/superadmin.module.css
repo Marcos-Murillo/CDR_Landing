@@ -777,6 +777,32 @@
 .submitButton:disabled,
 .cancelButton:disabled { opacity: 0.6; cursor: not-allowed; }
 
+.drawerPresetRow {
+  padding: 0 24px 12px;
+}
+
+.presetButton {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px dashed rgba(37, 99, 235, 0.35);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.presetButton:hover:not(:disabled) {
+  background: rgba(37, 99, 235, 0.14);
+}
+
+.presetButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Footer */
 .footer {
   background: #ffffff;

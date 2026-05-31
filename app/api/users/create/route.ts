@@ -4,7 +4,8 @@ import { adminAuth, adminDb } from '@/lib/firebase-admin'
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, displayName, role, area, platforms, platformRoles } = await req.json()
+    const { email, password, displayName, role, area, platforms, platformRoles, cedula, sede } =
+      await req.json()
 
     if (!email || !password || !displayName || !role || !area || !platforms) {
       return NextResponse.json({ error: 'Faltan campos requeridos.' }, { status: 400 })
@@ -12,7 +13,7 @@ export async function POST(req: NextRequest) {
 
     const userRecord = await adminAuth.createUser({ email, password, displayName })
 
-    await adminDb.collection('users').doc(userRecord.uid).set({
+    const profile: Record<string, unknown> = {
       email,
       displayName,
       role,
@@ -21,7 +22,11 @@ export async function POST(req: NextRequest) {
       platformRoles: platformRoles ?? {},
       createdAt: FieldValue.serverTimestamp(),
       createdBy: 'superadmin',
-    })
+    }
+    if (cedula?.trim()) profile.cedula = String(cedula).trim()
+    if (sede?.trim()) profile.sede = String(sede).trim()
+
+    await adminDb.collection('users').doc(userRecord.uid).set(profile)
 
     return NextResponse.json({ uid: userRecord.uid }, { status: 201 })
   } catch (err: unknown) {
