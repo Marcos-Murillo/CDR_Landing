@@ -19,12 +19,12 @@ const ROLE_MAP: Record<string, Record<string, string>> = {
   stock_cdu: {
     admin: 'admin',
     monitor: 'monitor',
-    superadmin: 'admin',
+    superadmin: 'superadmin',
   },
   stock_cdu_sanfer: {
     admin: 'admin',
     monitor: 'monitor',
-    superadmin: 'admin',
+    superadmin: 'superadmin',
   },
   stock_cultura: {
     admin: 'admin',

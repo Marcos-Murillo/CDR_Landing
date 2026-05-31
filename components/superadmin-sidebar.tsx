@@ -106,7 +106,7 @@ export function SuperadminSidebar() {
 
         <span className={styles.sidebarSectionLabel}>Plataformas</span>
         {['Cultura', 'Deporte', 'Transversal'].map((group) => {
-          const items = SUPERADMIN_PLATFORMS.filter((p) => p.area === group && p.available)
+          const items = SUPERADMIN_PLATFORMS.filter((p) => p.area === group)
           if (!items.length) return null
           return (
             <div key={group} className={styles.sidebarGroup}>

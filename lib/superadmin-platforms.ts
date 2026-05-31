@@ -32,6 +32,8 @@ export const SUPERADMIN_PLATFORMS = [
       NEXT_PUBLIC_URL_PRESTAMOS_ESCENARIOS: PRESTAMOS_ESCENARIOS_BASE_URL,
     } as Record<string, string | undefined>
   )[p.envKey],
+  /** Superadmin UI: siempre mostrar en sidebar aunque falte env en build */
+  visibleToSuperadmin: true,
 }))
 
 export const SUPERADMIN_PLATFORM_URLS: Record<string, string> = {
@@ -56,8 +58,8 @@ export const SUPERADMIN_SSO_REDIRECT: Record<string, string> = {
   bitacora_comunicaciones: '/superadmin',
   stock_cultura: '/',
   horarios: '/adofi',
-  stock_cdu: '/superadmin',
-  stock_cdu_sanfer: '/superadmin',
+  stock_cdu: '/',
+  stock_cdu_sanfer: '/',
   horarios_cdu: '/adofi',
   gym_cdu: '/admin',
   asistencias_cultura: '/super-admin',

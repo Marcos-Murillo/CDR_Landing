@@ -28,18 +28,7 @@ const PLATFORMS = [
   { id: 'asistencias_deporte',     name: 'Asistencias',         area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
 ].map((p) => ({
   ...p,
-  available: !!({
-    NEXT_PUBLIC_URL_BITACORA:                process.env.NEXT_PUBLIC_URL_BITACORA,
-    NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES,
-    NEXT_PUBLIC_URL_INVENTARIO_CULTURA:      process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA,
-    NEXT_PUBLIC_URL_HORARIOS:                process.env.NEXT_PUBLIC_URL_HORARIOS,
-    NEXT_PUBLIC_URL_HORARIOS_CDU:            process.env.NEXT_PUBLIC_URL_HORARIOS_CDU,
-    NEXT_PUBLIC_URL_GYM_CDU:                 process.env.NEXT_PUBLIC_URL_GYM_CDU,
-    NEXT_PUBLIC_URL_INVENTARIO_DEPORTE:      process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE,
-    NEXT_PUBLIC_URL_STOCK_CDU_SANFER:        STOCK_CDU_SANFER_BASE_URL,
-    NEXT_PUBLIC_URL_ASISTENCIAS:             process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
-    NEXT_PUBLIC_URL_CANAL_COMUNICACIONES:    process.env.NEXT_PUBLIC_URL_CANAL_COMUNICACIONES,
-  } as Record<string, string | undefined>)[p.envKey],
+  available: true,
 }))
 
 // Platforms that require a specific role override (independent of global role)
@@ -161,7 +150,7 @@ export default function SuperAdminPage() {
   const SSO_REDIRECT: Record<string, string> = {
     bitacoraac: '/superadmin', bitacora_comunicaciones: '/superadmin',
     stock_cultura: '/', horarios: '/adofi',
-    stock_cdu: '/superadmin', stock_cdu_sanfer: '/superadmin', horarios_cdu: '/adofi', gym_cdu: '/admin',
+    stock_cdu: '/', stock_cdu_sanfer: '/', horarios_cdu: '/adofi', gym_cdu: '/admin',
     asistencias_cultura: '/super-admin', asistencias_deporte: '/super-admin',
     canal_comunicaciones: '',
     prestamos_escenarios: '/superadmin',
