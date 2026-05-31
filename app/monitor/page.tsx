@@ -7,6 +7,7 @@ import { signOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuth } from '@/hoocks/use-auth'
 import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
+import { STOCK_CDU_SANFER_BASE_URL } from '@/lib/stock-cdu-sanfer-url'
 import LogoIcon from '@/components/logo-icon'
 import styles from './monitor.module.css'
 
@@ -76,7 +77,7 @@ const ALL_MODULES = [
     name: 'Stock CDU San Fernando',
     description: 'Préstamo de implementos deportivos en la sede San Fernando.',
     area: 'deporte',
-    url: process.env.NEXT_PUBLIC_URL_STOCK_CDU_SANFER ?? '#',
+    url: STOCK_CDU_SANFER_BASE_URL,
     sso: true,
     icon: 'box',
     color: 'green',

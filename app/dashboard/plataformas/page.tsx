@@ -1,6 +1,7 @@
 "use client"
 
 import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
+import { STOCK_CDU_SANFER_BASE_URL } from '@/lib/stock-cdu-sanfer-url'
 import { useAuth } from '@/hoocks/use-auth'
 import { GlowingButton } from '@/components/ui/glowing-button'
 import styles from './plataformas.module.css'
@@ -12,7 +13,7 @@ const ALL_MODULES = [
   { id: 'horarios', name: 'Horarios Cultura', description: 'Consulta de horarios de grupos culturales: danza, musica, teatro y mas.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_HORARIOS || '#', icon: 'calendar' },
   { id: 'canal_comunicaciones', name: 'Canal Comunicaciones', description: 'Gestión de peticiones y eventos del canal de comunicaciones del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_CANAL_COMUNICACIONES || '#', icon: 'clipboard' },
   { id: 'stock_cdu', name: 'Stock CDU', description: 'Inventario deportivo con registro de usuarios, préstamos de equipos y reportes del Centro Deportivo.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE || '#', icon: 'box' },
-  { id: 'stock_cdu_sanfer', name: 'Stock CDU San Fernando', description: 'Préstamo de implementos deportivos en la sede San Fernando.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_STOCK_CDU_SANFER || '#', icon: 'box' },
+  { id: 'stock_cdu_sanfer', name: 'Stock CDU San Fernando', description: 'Préstamo de implementos deportivos en la sede San Fernando.', area: 'deporte', url: STOCK_CDU_SANFER_BASE_URL, icon: 'box' },
   { id: 'horarios_cdu', name: 'Horarios CDU', description: 'Consulta de horarios de grupos y disciplinas deportivas del Centro Deportivo Universitario.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_HORARIOS_CDU || '#', icon: 'calendar' },
   { id: 'gym_cdu', name: 'GymControl CDU', description: 'Registro y control de acceso a las instalaciones del gimnasio del Centro Deportivo.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_GYM_CDU || '#', icon: 'trophy' },
   { id: 'asistencias_cultura', name: 'Asistencias Cultura', description: 'Inscripciones, asistencia con QR, estadísticas y reportes del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app', icon: 'chart' },

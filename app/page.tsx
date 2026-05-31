@@ -7,6 +7,7 @@ import { FlippingCard } from '@/components/ui/flipping-card'
 import { GlowingButton } from '@/components/ui/glowing-button'
 import { BorderBeam } from '@/components/ui/border-beam'
 import { CursorCard, CursorCardsContainer } from '@/components/ui/cursor-cards'
+import { STOCK_CDU_SANFER_BASE_URL } from '@/lib/stock-cdu-sanfer-url'
 import styles from './page.module.css'
 
 const PLATFORMS = [
@@ -64,7 +65,7 @@ const PLATFORMS = [
     description: 'Préstamo de implementos deportivos en la sede San Fernando. Usuarios registrados en CDUControl.',
     area: 'deporte',
     tags: ['San Fernando', 'Préstamos', 'Implementos'],
-    url: process.env.NEXT_PUBLIC_URL_STOCK_CDU_SANFER ?? '/login',
+    url: STOCK_CDU_SANFER_BASE_URL,
   },
   {
     id: 'horarios_cdu',
