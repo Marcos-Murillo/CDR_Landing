@@ -26,9 +26,15 @@ const PLATFORMS = [
   { id: 'horarios_cdu',            name: 'Horarios CDU',        area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_HORARIOS_CDU' },
   { id: 'gym_cdu',                 name: 'GymControl CDU',      area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_GYM_CDU' },
   { id: 'asistencias_deporte',     name: 'Asistencias',         area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
+  { id: 'prestamos_escenarios',    name: 'Préstamos Escenarios', area: 'Deporte',     envKey: 'NEXT_PUBLIC_URL_PRESTAMOS_ESCENARIOS' },
 ].map((p) => ({
   ...p,
-  available: true,
+  available:
+    p.id === 'prestamos_escenarios'
+      ? Boolean(PRESTAMOS_ESCENARIOS_BASE_URL)
+      : p.id === 'stock_cdu_sanfer'
+        ? Boolean(STOCK_CDU_SANFER_BASE_URL)
+        : true,
 }))
 
 // Platforms that require a specific role override (independent of global role)
@@ -159,7 +165,7 @@ export default function SuperAdminPage() {
     stock_cdu: '/', stock_cdu_sanfer: '/', horarios_cdu: '/adofi', gym_cdu: '/admin',
     asistencias_cultura: '/super-admin', asistencias_deporte: '/super-admin',
     canal_comunicaciones: '',
-    prestamos_escenarios: '/superadmin',
+    prestamos_escenarios: '/admin',
   }
 
   const handleOpenPlatform = async (platformId: string) => {

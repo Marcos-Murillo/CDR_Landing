@@ -65,5 +65,5 @@ export const SUPERADMIN_SSO_REDIRECT: Record<string, string> = {
   asistencias_cultura: '/super-admin',
   asistencias_deporte: '/super-admin',
   canal_comunicaciones: '',
-  prestamos_escenarios: '/superadmin',
+  prestamos_escenarios: '/admin',
 }
