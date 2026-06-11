@@ -2,6 +2,7 @@
 
 import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
 import { STOCK_CDU_SANFER_BASE_URL } from '@/lib/stock-cdu-sanfer-url'
+import { SUPERADMIN_SSO_REDIRECT } from '@/lib/superadmin-platforms'
 import { useAuth } from '@/hoocks/use-auth'
 import { GlowingButton } from '@/components/ui/glowing-button'
 import styles from './plataformas.module.css'
@@ -11,7 +12,7 @@ const ALL_MODULES = [
   { id: 'bitacora_comunicaciones', name: 'Bitácora COM', description: 'Registro y seguimiento de actividades del área de comunicaciones de la sección.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES || '#', icon: 'clipboard' },
   { id: 'stock_cultura', name: 'Stock Cultura', description: 'Gestión de inventario de instrumentos, materiales y recursos del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA || '#', icon: 'box' },
   { id: 'horarios', name: 'Horarios Cultura', description: 'Consulta de horarios de grupos culturales: danza, musica, teatro y mas.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_HORARIOS || '#', icon: 'calendar' },
-  { id: 'canal_comunicaciones', name: 'Canal Comunicaciones', description: 'Gestión de peticiones y eventos del canal de comunicaciones del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_CANAL_COMUNICACIONES || '#', icon: 'clipboard' },
+  { id: 'canal_comunicaciones', name: 'Canal Comunicaciones', description: 'Gestión de peticiones y eventos del canal de comunicaciones (Cultura y Deporte).', area: 'all', url: process.env.NEXT_PUBLIC_URL_CANAL_COMUNICACIONES || '#', icon: 'clipboard' },
   { id: 'stock_cdu', name: 'Stock CDU', description: 'Inventario deportivo con registro de usuarios, préstamos de equipos y reportes del Centro Deportivo.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE || '#', icon: 'box' },
   { id: 'stock_cdu_sanfer', name: 'Stock CDU San Fernando', description: 'Préstamo de implementos deportivos en la sede San Fernando.', area: 'deporte', url: STOCK_CDU_SANFER_BASE_URL, icon: 'box' },
   { id: 'horarios_cdu', name: 'Horarios CDU', description: 'Consulta de horarios de grupos y disciplinas deportivas del Centro Deportivo Universitario.', area: 'deporte', url: process.env.NEXT_PUBLIC_URL_HORARIOS_CDU || '#', icon: 'calendar' },
@@ -22,11 +23,11 @@ const ALL_MODULES = [
 ]
 
 const SSO_PLATFORMS: Record<string, string> = {
-  bitacoraac: '/admin', bitacora_comunicaciones: '/admin',
-  stock_cdu: '/', stock_cdu_sanfer: '/', stock_cultura: '/', horarios: '/adofi', horarios_cdu: '/adofi', gym_cdu: '/admin',
-  asistencias_cultura: '/usuarios', asistencias_deporte: '/usuarios',
-  canal_comunicaciones: '/login',
-  prestamos_escenarios: '/admin',
+  ...SUPERADMIN_SSO_REDIRECT,
+  bitacoraac: '/admin',
+  bitacora_comunicaciones: '/admin',
+  asistencias_cultura: '/usuarios',
+  asistencias_deporte: '/usuarios',
 }
 
 function ArrowRightIcon() {

@@ -3,7 +3,7 @@ import { adminDb } from '@/lib/firebase-admin'
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { uid, displayName, role, area, platforms, platformRoles, cedula, sede } =
+    const { uid, displayName, role, area, platforms, platformRoles, platformConfig, cedula, sede } =
       await req.json()
     if (!uid) return NextResponse.json({ error: 'UID requerido.' }, { status: 400 })
 
@@ -13,6 +13,7 @@ export async function PATCH(req: NextRequest) {
     if (area !== undefined) update.area = area
     if (platforms !== undefined) update.platforms = platforms
     if (platformRoles !== undefined) update.platformRoles = platformRoles
+    if (platformConfig !== undefined) update.platformConfig = platformConfig
     if (cedula !== undefined) update.cedula = cedula?.trim() ? String(cedula).trim() : null
     if (sede !== undefined) update.sede = sede?.trim() ? String(sede).trim() : null
 

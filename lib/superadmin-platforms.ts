@@ -7,7 +7,7 @@ export const SUPERADMIN_PLATFORMS = [
   { id: 'stock_cultura', name: 'Stock Cultura', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_INVENTARIO_CULTURA' },
   { id: 'horarios', name: 'Horarios Cultura', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_HORARIOS' },
   { id: 'asistencias_cultura', name: 'Asistencias', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
-  { id: 'canal_comunicaciones', name: 'Canal Comunicaciones', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_CANAL_COMUNICACIONES' },
+  { id: 'canal_comunicaciones', name: 'Canal Comunicaciones', area: 'Cultura y Deporte', envKey: 'NEXT_PUBLIC_URL_CANAL_COMUNICACIONES' },
   { id: 'stock_cdu', name: 'Stock CDU', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_INVENTARIO_DEPORTE' },
   { id: 'stock_cdu_sanfer', name: 'Stock CDU San Fernando', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_STOCK_CDU_SANFER' },
   { id: 'horarios_cdu', name: 'Horarios CDU', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_HORARIOS_CDU' },
@@ -64,6 +64,7 @@ export const SUPERADMIN_SSO_REDIRECT: Record<string, string> = {
   gym_cdu: '/admin',
   asistencias_cultura: '/super-admin',
   asistencias_deporte: '/super-admin',
-  canal_comunicaciones: '',
+  // Canal ignora redirect y enruta por rol (superadmin/admin/manager)
+  canal_comunicaciones: '/auth/sso',
   prestamos_escenarios: '/admin',
 }

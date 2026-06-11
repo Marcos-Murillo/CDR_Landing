@@ -7,54 +7,45 @@ import { SuperadminSidebar } from '@/components/superadmin-sidebar'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuth } from '@/hoocks/use-auth'
-import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
-import { STOCK_CDU_SANFER_BASE_URL } from '@/lib/stock-cdu-sanfer-url'
-import LogoIcon from '@/components/logo-icon'
+import {
+  SUPERADMIN_PLATFORMS,
+  SUPERADMIN_PLATFORM_URLS,
+  SUPERADMIN_SSO_REDIRECT,
+} from '@/lib/superadmin-platforms'
+import {
+  type CdrRole,
+  type StaffSede,
+  type UserArea,
+  validatePlatformAccess,
+  resolveProfileSede,
+  PLATFORM_BY_ID,
+} from '@/lib/platform-access-config'
+import {
+  UserAccessForm,
+  emptyAccessFormValues,
+  type UserAccessFormValues,
+} from '@/components/superadmin/user-access-form'
 import { GlowingButton } from '@/components/ui/glowing-button'
-import { GradientSlideButton } from '@/components/ui/gradient-slide-button'
 import styles from './superadmin.module.css'
 
-const PLATFORMS = [
-  { id: 'bitacoraac',              name: 'Bitácora AC',         area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_BITACORA' },
-  { id: 'bitacora_comunicaciones', name: 'Bitácora COM',        area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES' },
-  { id: 'stock_cultura',           name: 'Stock Cultura',       area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_INVENTARIO_CULTURA' },
-  { id: 'horarios',                name: 'Horarios Cultura',    area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_HORARIOS' },
-  { id: 'asistencias_cultura',     name: 'Asistencias',         area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
-  { id: 'canal_comunicaciones',    name: 'Canal Comunicaciones',area: 'Cultura',      envKey: 'NEXT_PUBLIC_URL_CANAL_COMUNICACIONES' },
-  { id: 'stock_cdu',               name: 'Stock CDU',           area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_INVENTARIO_DEPORTE' },
-  { id: 'stock_cdu_sanfer',        name: 'Stock CDU San Fernando', area: 'Deporte',   envKey: 'NEXT_PUBLIC_URL_STOCK_CDU_SANFER' },
-  { id: 'horarios_cdu',            name: 'Horarios CDU',        area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_HORARIOS_CDU' },
-  { id: 'gym_cdu',                 name: 'GymControl CDU',      area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_GYM_CDU' },
-  { id: 'asistencias_deporte',     name: 'Asistencias',         area: 'Deporte',      envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
-  { id: 'prestamos_escenarios',    name: 'Préstamos Escenarios', area: 'Deporte',     envKey: 'NEXT_PUBLIC_URL_PRESTAMOS_ESCENARIOS' },
-].map((p) => ({
-  ...p,
-  available:
-    p.id === 'prestamos_escenarios'
-      ? Boolean(PRESTAMOS_ESCENARIOS_BASE_URL)
-      : p.id === 'stock_cdu_sanfer'
-        ? Boolean(STOCK_CDU_SANFER_BASE_URL)
-        : true,
+const PLATFORMS = SUPERADMIN_PLATFORMS.map((p) => ({
+  id: p.id,
+  name: p.name,
+  area: p.area,
 }))
-
-// Platforms that require a specific role override (independent of global role)
-const PLATFORM_ROLE_OVERRIDES: string[] = ['canal_comunicaciones']
 
 /** Plantilla rápida: admin deporte con acceso Gym + Stock San Fernando */
 const SANFER_ADMIN_PLATFORMS = ['gym_cdu', 'stock_cdu_sanfer'] as const
-
-type NewUserRole = 'admin' | 'monitor'
-type UserArea    = 'cultura' | 'deporte' | 'all'
-type StaffSede   = 'melendez' | 'san_fernando' | ''
 
 interface CreatedUser {
   id: string
   email: string
   displayName: string
-  role: NewUserRole
+  role: CdrRole
   area: UserArea
   platforms: string[]
   platformRoles?: Record<string, string>
+  platformConfig?: Record<string, Record<string, string>>
   cedula?: string
   sede?: string
   createdAt: string
@@ -145,37 +136,14 @@ export default function SuperAdminPage() {
   // null = still checking, true = authorized, false = not authorized
   const [authorized, setAuthorized]     = useState<boolean | null>(null)
 
-  const PLATFORM_URLS: Record<string, string> = {
-    bitacoraac:              process.env.NEXT_PUBLIC_URL_BITACORA ?? '',
-    bitacora_comunicaciones: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES ?? '',
-    stock_cultura:           process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA ?? '',
-    horarios:                process.env.NEXT_PUBLIC_URL_HORARIOS ?? '',
-    stock_cdu:               process.env.NEXT_PUBLIC_URL_INVENTARIO_DEPORTE ?? '',
-    stock_cdu_sanfer:        STOCK_CDU_SANFER_BASE_URL,
-    horarios_cdu:            process.env.NEXT_PUBLIC_URL_HORARIOS_CDU ?? '',
-    gym_cdu:                 process.env.NEXT_PUBLIC_URL_GYM_CDU ?? '',
-    asistencias_cultura:     process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
-    asistencias_deporte:     process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app',
-    prestamos_escenarios:    PRESTAMOS_ESCENARIOS_BASE_URL,
-  }
-
-  const SSO_REDIRECT: Record<string, string> = {
-    bitacoraac: '/superadmin', bitacora_comunicaciones: '/superadmin',
-    stock_cultura: '/', horarios: '/adofi',
-    stock_cdu: '/', stock_cdu_sanfer: '/', horarios_cdu: '/adofi', gym_cdu: '/admin',
-    asistencias_cultura: '/super-admin', asistencias_deporte: '/super-admin',
-    canal_comunicaciones: '',
-    prestamos_escenarios: '/admin',
-  }
-
   const handleOpenPlatform = async (platformId: string) => {
-    const url = PLATFORM_URLS[platformId]
+    const url = SUPERADMIN_PLATFORM_URLS[platformId]
     if (!url) return
     const uid = auth.currentUser?.uid ?? '1007260358'
     try {
       const res  = await fetch('/api/auth/sso-token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid, platform: platformId }) })
       const data = await res.json()
-      if (res.ok && data.token) { window.open(`${url}/auth/sso?token=${data.token}&redirect=${SSO_REDIRECT[platformId] ?? '/'}`, '_blank'); return }
+      if (res.ok && data.token) { window.open(`${url}/auth/sso?token=${data.token}&redirect=${SUPERADMIN_SSO_REDIRECT[platformId] ?? '/'}`, '_blank'); return }
     } catch { /* fallback */ }
     window.open(url, '_blank')
   }
@@ -184,23 +152,13 @@ export default function SuperAdminPage() {
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail]             = useState('')
   const [password, setPassword]       = useState('')
-  const [role, setRole]               = useState<NewUserRole>('monitor')
-  const [area, setArea]               = useState<UserArea>('cultura')
-  const [platforms, setPlatforms]     = useState<string[]>([])
-  const [platformRoles, setPlatformRoles] = useState<Record<string, string>>({})
-  const [cedula, setCedula]           = useState('')
-  const [sede, setSede]               = useState<StaffSede>('')
+  const [access, setAccess] = useState<UserAccessFormValues>(emptyAccessFormValues())
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Edit
   const [editingUser, setEditingUser]       = useState<CreatedUser | null>(null)
   const [editDisplayName, setEditDisplayName] = useState('')
-  const [editRole, setEditRole]             = useState<NewUserRole>('monitor')
-  const [editArea, setEditArea]             = useState<UserArea>('cultura')
-  const [editPlatforms, setEditPlatforms]   = useState<string[]>([])
-  const [editPlatformRoles, setEditPlatformRoles] = useState<Record<string, string>>({})
-  const [editCedula, setEditCedula]         = useState('')
-  const [editSede, setEditSede]             = useState<StaffSede>('')
+  const [editAccess, setEditAccess] = useState<UserAccessFormValues>(emptyAccessFormValues())
   const [isEditSubmitting, setIsEditSubmitting] = useState(false)
   const [editError, setEditError]           = useState('')
   const [openDropdown, setOpenDropdown]     = useState<string | null>(null)
@@ -233,20 +191,23 @@ export default function SuperAdminPage() {
     setDisplayName('')
     setEmail('')
     setPassword('')
-    setRole('monitor')
-    setArea('cultura')
-    setPlatforms([])
-    setPlatformRoles({})
-    setCedula('')
-    setSede('')
+    setAccess(emptyAccessFormValues())
     setError('')
   }
 
   const applySanferAdminPreset = () => {
-    setRole('admin')
-    setArea('deporte')
-    setPlatforms([...SANFER_ADMIN_PLATFORMS])
-    setSede('san_fernando')
+    setAccess({
+      role: 'admin',
+      area: 'deporte',
+      platforms: [...SANFER_ADMIN_PLATFORMS],
+      platformRoles: {},
+      platformConfig: {
+        gym_cdu: { sede: 'san_fernando', espacio: 'gimnasio' },
+        stock_cdu_sanfer: { sede: 'san_fernando' },
+      },
+      cedula: '',
+      sede: 'san_fernando',
+    })
     setError('')
   }
 
@@ -254,10 +215,12 @@ export default function SuperAdminPage() {
     e.preventDefault(); setError(''); setSuccess('')
     if (!displayName.trim() || !email.trim() || !password.trim()) { setError('Completa todos los campos.'); return }
     if (password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres.'); return }
-    if (platforms.length === 0) { setError('Selecciona al menos una plataforma.'); return }
+    const validationError = validatePlatformAccess(access.role, access.area, access)
+    if (validationError) { setError(validationError); return }
+    const resolvedSede = resolveProfileSede(access.platforms, access.platformConfig, access.sede)
     setIsSubmitting(true)
     try {
-      const res  = await fetch('/api/users/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), password, displayName: displayName.trim(), role, area, platforms, platformRoles, cedula: cedula.trim() || undefined, sede: sede || undefined }) })
+      const res  = await fetch('/api/users/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), password, displayName: displayName.trim(), role: access.role, area: access.area, platforms: access.platforms, platformRoles: access.platformRoles, platformConfig: access.platformConfig, cedula: access.cedula.trim() || undefined, sede: resolvedSede || undefined }) })
       const data = await res.json()
       if (!res.ok) { setError(data.error ?? 'Error al crear el usuario.'); return }
       setSuccess(`Usuario "${displayName}" creado correctamente.`)
@@ -277,20 +240,27 @@ export default function SuperAdminPage() {
   const openEdit = (u: CreatedUser) => {
     setEditingUser(u)
     setEditDisplayName(u.displayName)
-    setEditRole(u.role)
-    setEditArea(u.area)
-    setEditPlatforms(u.platforms)
-    setEditPlatformRoles(u.platformRoles ?? {})
-    setEditCedula(u.cedula ?? '')
-    setEditSede((u.sede as StaffSede) ?? '')
+    setEditAccess({
+      role: u.role,
+      area: u.area,
+      platforms: u.platforms,
+      platformRoles: u.platformRoles ?? {},
+      platformConfig: u.platformConfig ?? {},
+      cedula: u.cedula ?? '',
+      sede: (u.sede as StaffSede) ?? '',
+    })
     setEditError('')
     setOpenDropdown(null)
   }
 
   const handleEdit = async (e: React.FormEvent) => {
-    e.preventDefault(); if (!editingUser) return; setEditError(''); setIsEditSubmitting(true)
+    e.preventDefault(); if (!editingUser) return; setEditError('')
+    const validationError = validatePlatformAccess(editAccess.role, editAccess.area, editAccess)
+    if (validationError) { setEditError(validationError); return }
+    const resolvedSede = resolveProfileSede(editAccess.platforms, editAccess.platformConfig, editAccess.sede)
+    setIsEditSubmitting(true)
     try {
-      const res  = await fetch('/api/users/update', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: editingUser.id, displayName: editDisplayName.trim(), role: editRole, area: editArea, platforms: editPlatforms, platformRoles: editPlatformRoles, cedula: editCedula.trim(), sede: editSede || null }) })
+      const res  = await fetch('/api/users/update', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: editingUser.id, displayName: editDisplayName.trim(), role: editAccess.role, area: editAccess.area, platforms: editAccess.platforms, platformRoles: editAccess.platformRoles, platformConfig: editAccess.platformConfig, cedula: editAccess.cedula.trim(), sede: resolvedSede || null }) })
       const data = await res.json()
       if (!res.ok) { setEditError(data.error ?? 'Error al actualizar.'); return }
       setSuccess(`Usuario "${editDisplayName}" actualizado.`); setEditingUser(null); fetchUsers()
@@ -298,9 +268,9 @@ export default function SuperAdminPage() {
     finally  { setIsEditSubmitting(false) }
   }
 
-  const getRoleLabel  = (r: NewUserRole) => r === 'admin' ? 'Administrador' : 'Monitor'
+  const getRoleLabel  = (r: CdrRole) => r === 'admin' ? 'Administrador' : 'Monitor'
   const getAreaLabel  = (a: UserArea)    => ({ cultura: 'Cultura', deporte: 'Deporte', all: 'Multi-área' }[a])
-  const getPlatNames  = (ids: string[])  => ids.map((id) => PLATFORMS.find((p) => p.id === id)?.name ?? id).join(', ')
+  const getPlatNames  = (ids: string[])  => ids.map((id) => PLATFORMS.find((p) => p.id === id)?.name ?? PLATFORM_BY_ID[id as keyof typeof PLATFORM_BY_ID]?.name ?? id).join(', ')
 
   // ── Render ────────────────────────────────────────────────────────────────
   if (authorized !== true) {
@@ -428,79 +398,11 @@ export default function SuperAdminPage() {
                 <label className={styles.label}>Contraseña temporal</label>
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres" className={styles.input} disabled={isSubmitting} />
               </div>
-              <div className={styles.formRow}>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Cédula (SSO Gym / identificación)</label>
-                  <input type="text" value={cedula} onChange={(e) => setCedula(e.target.value)} placeholder="Ej. 1234567890" className={styles.input} disabled={isSubmitting} />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Sede CDUControl</label>
-                  <select value={sede} onChange={(e) => setSede(e.target.value as StaffSede)} className={styles.select} disabled={isSubmitting}>
-                    <option value="">Sin sede fija</option>
-                    <option value="melendez">Meléndez</option>
-                    <option value="san_fernando">San Fernando</option>
-                  </select>
-                </div>
-              </div>
-              <div className={styles.formRow}>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Rol</label>
-                  <select value={role} onChange={(e) => setRole(e.target.value as NewUserRole)} className={styles.select} disabled={isSubmitting}>
-                    <option value="monitor">Monitor</option>
-                    <option value="admin">Administrador</option>
-                  </select>
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Área</label>
-                  <select value={area} onChange={(e) => setArea(e.target.value as UserArea)} className={styles.select} disabled={isSubmitting}>
-                    <option value="cultura">Cultura</option>
-                    <option value="deporte">Deporte</option>
-                    <option value="all">Multi-área</option>
-                  </select>
-                </div>
-              </div>
-              <div className={styles.inputGroup}>
-                <label className={styles.label}>Plataformas vinculadas</label>
-                <div className={styles.platformGrid}>
-                  {PLATFORMS.map((p) => {
-                    const sel = platforms.includes(p.id)
-                    return (
-                      <GradientSlideButton
-                        key={p.id}
-                        type="button"
-                        disabled={!p.available || isSubmitting}
-                        onClick={() => { if (!p.available) return; setPlatforms((prev) => prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id]) }}
-                        colorFrom="#4ade80"
-                        colorTo="#15803d"
-                        className={`${styles.platformOption} ${sel ? styles.platformSelected : ''} ${!p.available ? styles.platformDisabled : ''}`}
-                      >
-                        <span className={styles.platformName}>{p.name}</span>
-                        <span className={styles.platformAreaLabel}>{p.area}</span>
-                        {!p.available && <span className={styles.platformSoon}>Próximamente</span>}
-                        {sel && p.available && <span className={styles.platformCheck}><CheckIcon /></span>}
-                      </GradientSlideButton>
-                    )
-                  })}
-                </div>
-              </div>
-              {/* Role overrides for platforms that need it */}
-              {PLATFORM_ROLE_OVERRIDES.filter((pid) => platforms.includes(pid)).map((pid) => {
-                const plat = PLATFORMS.find((p) => p.id === pid)
-                return (
-                  <div key={pid} className={styles.inputGroup}>
-                    <label className={styles.label}>Rol en {plat?.name}</label>
-                    <select
-                      value={platformRoles[pid] ?? 'manager'}
-                      onChange={(e) => setPlatformRoles((prev) => ({ ...prev, [pid]: e.target.value }))}
-                      className={styles.select}
-                      disabled={isSubmitting}
-                    >
-                      <option value="manager">Monitor</option>
-                      <option value="admin">Administrador</option>
-                    </select>
-                  </div>
-                )
-              })}
+              <UserAccessForm
+                values={access}
+                onChange={(patch) => setAccess((prev) => ({ ...prev, ...patch }))}
+                disabled={isSubmitting}
+              />
               <div className={styles.drawerActions}>
                 <button type="button" className={styles.cancelButton} onClick={() => { setShowForm(false); resetForm() }} disabled={isSubmitting}>Cancelar</button>
                 <button type="submit" className={styles.submitButton} disabled={isSubmitting}>{isSubmitting ? 'Creando...' : 'Crear usuario'}</button>
@@ -529,79 +431,11 @@ export default function SuperAdminPage() {
                 <label className={styles.label}>Nombre completo</label>
                 <input type="text" value={editDisplayName} onChange={(e) => setEditDisplayName(e.target.value)} className={styles.input} disabled={isEditSubmitting} />
               </div>
-              <div className={styles.formRow}>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Cédula</label>
-                  <input type="text" value={editCedula} onChange={(e) => setEditCedula(e.target.value)} className={styles.input} disabled={isEditSubmitting} />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Sede CDUControl</label>
-                  <select value={editSede} onChange={(e) => setEditSede(e.target.value as StaffSede)} className={styles.select} disabled={isEditSubmitting}>
-                    <option value="">Sin sede fija</option>
-                    <option value="melendez">Meléndez</option>
-                    <option value="san_fernando">San Fernando</option>
-                  </select>
-                </div>
-              </div>
-              <div className={styles.formRow}>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Rol</label>
-                  <select value={editRole} onChange={(e) => setEditRole(e.target.value as NewUserRole)} className={styles.select} disabled={isEditSubmitting}>
-                    <option value="monitor">Monitor</option>
-                    <option value="admin">Administrador</option>
-                  </select>
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Área</label>
-                  <select value={editArea} onChange={(e) => setEditArea(e.target.value as UserArea)} className={styles.select} disabled={isEditSubmitting}>
-                    <option value="cultura">Cultura</option>
-                    <option value="deporte">Deporte</option>
-                    <option value="all">Multi-área</option>
-                  </select>
-                </div>
-              </div>
-              <div className={styles.inputGroup}>
-                <label className={styles.label}>Plataformas vinculadas</label>
-                <div className={styles.platformGrid}>
-                  {PLATFORMS.map((p) => {
-                    const sel = editPlatforms.includes(p.id)
-                    return (
-                      <GradientSlideButton
-                        key={p.id}
-                        type="button"
-                        disabled={!p.available || isEditSubmitting}
-                        onClick={() => { if (!p.available) return; setEditPlatforms((prev) => prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id]) }}
-                        colorFrom="#4ade80"
-                        colorTo="#15803d"
-                        className={`${styles.platformOption} ${sel ? styles.platformSelected : ''} ${!p.available ? styles.platformDisabled : ''}`}
-                      >
-                        <span className={styles.platformName}>{p.name}</span>
-                        <span className={styles.platformAreaLabel}>{p.area}</span>
-                        {!p.available && <span className={styles.platformSoon}>Próximamente</span>}
-                        {sel && p.available && <span className={styles.platformCheck}><CheckIcon /></span>}
-                      </GradientSlideButton>
-                    )
-                  })}
-                </div>
-              </div>
-              {/* Role overrides for platforms that need it */}
-              {PLATFORM_ROLE_OVERRIDES.filter((pid) => editPlatforms.includes(pid)).map((pid) => {
-                const plat = PLATFORMS.find((p) => p.id === pid)
-                return (
-                  <div key={pid} className={styles.inputGroup}>
-                    <label className={styles.label}>Rol en {plat?.name}</label>
-                    <select
-                      value={editPlatformRoles[pid] ?? 'manager'}
-                      onChange={(e) => setEditPlatformRoles((prev) => ({ ...prev, [pid]: e.target.value }))}
-                      className={styles.select}
-                      disabled={isEditSubmitting}
-                    >
-                      <option value="manager">Monitor</option>
-                      <option value="admin">Administrador</option>
-                    </select>
-                  </div>
-                )
-              })}
+              <UserAccessForm
+                values={editAccess}
+                onChange={(patch) => setEditAccess((prev) => ({ ...prev, ...patch }))}
+                disabled={isEditSubmitting}
+              />
               <div className={styles.drawerActions}>
                 <button type="button" className={styles.cancelButton} onClick={() => setEditingUser(null)} disabled={isEditSubmitting}>Cancelar</button>
                 <button type="submit" className={styles.submitButton} disabled={isEditSubmitting}>{isEditSubmitting ? 'Guardando...' : 'Guardar cambios'}</button>

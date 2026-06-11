@@ -135,10 +135,10 @@ export default function GymCduPage() {
       <header className={styles.topbar}>
         <div className={styles.topbarLeft}>
           <div className={styles.topbarEyebrow}><span className={styles.eyebrowLine} /><span>Dashboard</span></div>
-          <h1 className={styles.topbarTitle}>GymControl CDU</h1>
+          <h1 className={styles.topbarTitle}>Entradas a Servicios CDU</h1>
         </div>
         <GlowingButton glowColor="#2563EB" className={styles.openBtn} onClick={handleOpen}>
-          <ExternalIcon /> Abrir GymControl
+          <ExternalIcon /> Abrir 
         </GlowingButton>
       </header>
       <main className={styles.main}>

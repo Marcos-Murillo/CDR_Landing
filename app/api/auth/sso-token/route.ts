@@ -1,72 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 import { adminAuth, adminDb } from '@/lib/firebase-admin'
+import { SSO_ROLE_MAP } from '@/lib/platform-access-config'
 
 const SSO_SECRET = process.env.SSO_SECRET!
-
-// Role mappings per platform
-const ROLE_MAP: Record<string, Record<string, string>> = {
-  bitacoraac: {
-    admin: 'admin',
-    monitor: 'guest',
-    superadmin: 'superadmin',
-  },
-  bitacora_comunicaciones: {
-    admin: 'admin',
-    monitor: 'guest',
-    superadmin: 'superadmin',
-  },
-  stock_cdu: {
-    admin: 'admin',
-    monitor: 'monitor',
-    superadmin: 'superadmin',
-  },
-  stock_cdu_sanfer: {
-    admin: 'admin',
-    monitor: 'monitor',
-    superadmin: 'superadmin',
-  },
-  stock_cultura: {
-    admin: 'admin',
-    monitor: 'monitor',
-    superadmin: 'admin',
-  },
-  horarios: {
-    admin: 'admin',
-    monitor: 'monitor',
-    superadmin: 'admin',
-  },
-  horarios_cdu: {
-    admin: 'admin',
-    monitor: 'monitor',
-    superadmin: 'admin',
-  },
-  gym_cdu: {
-    admin: 'admin',
-    monitor: 'monitor',
-    superadmin: 'admin',
-  },
-  asistencias_cultura: {
-    admin: 'ADMIN',
-    monitor: 'MONITOR',
-    superadmin: 'SUPER_ADMIN',
-  },
-  asistencias_deporte: {
-    admin: 'ADMIN',
-    monitor: 'MONITOR',
-    superadmin: 'SUPER_ADMIN',
-  },
-  canal_comunicaciones: {
-    admin: 'admin',
-    monitor: 'manager',
-    superadmin: 'superadmin',
-  },
-  prestamos_escenarios: {
-    admin: 'admin',
-    monitor: 'admin',
-    superadmin: 'superadmin',
-  },
-}
+const ROLE_MAP = SSO_ROLE_MAP
 
 // Redirect path after SSO login per platform
 const SSO_REDIRECT: Record<string, string> = {
@@ -78,10 +16,7 @@ const SSO_REDIRECT: Record<string, string> = {
   horarios: '/adofi',
 }
 
-// Maps cdr-landing area to gym_cdu espacio for monitors
-const AREA_TO_ESPACIO: Record<string, string> = {
-  deporte: 'gimnasio',
-}
+const GYM_ESPACIOS = new Set(['gimnasio', 'guardarropas', 'piscina'])
 
 const SUPERADMIN_ID = '1007260358'
 
@@ -159,10 +94,11 @@ export async function POST(req: NextRequest) {
     // Use platform-specific role override if set, otherwise fall back to global role mapping
     const mappedRole = (profile.platformRoles?.[platform]) ?? platformRoles[profile.role] ?? 'guest'
 
-    // For gym_cdu monitors, map area to espacio
-    const espacio = mappedRole === 'monitor'
-      ? (AREA_TO_ESPACIO[profile.area] ?? 'gimnasio')
-      : undefined
+    const gymEspacio = profile.platformConfig?.gym_cdu?.espacio as string | undefined
+    const espacio =
+      platform === 'gym_cdu' && mappedRole === 'monitor'
+        ? (GYM_ESPACIOS.has(gymEspacio ?? '') ? gymEspacio : 'gimnasio')
+        : undefined
 
     const tokenPayload: Record<string, unknown> = {
       uid,

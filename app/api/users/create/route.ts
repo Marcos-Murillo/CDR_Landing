@@ -4,7 +4,7 @@ import { adminAuth, adminDb } from '@/lib/firebase-admin'
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, displayName, role, area, platforms, platformRoles, cedula, sede } =
+    const { email, password, displayName, role, area, platforms, platformRoles, platformConfig, cedula, sede } =
       await req.json()
 
     if (!email || !password || !displayName || !role || !area || !platforms) {
@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
       area,
       platforms,
       platformRoles: platformRoles ?? {},
+      platformConfig: platformConfig ?? {},
       createdAt: FieldValue.serverTimestamp(),
       createdBy: 'superadmin',
     }

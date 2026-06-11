@@ -139,7 +139,7 @@ export default function AsistenciasDeportePage() {
       <header className={styles.topbar}>
         <div className={styles.topbarLeft}>
           <div className={styles.topbarEyebrow}><span className={styles.eyebrowLine} /><span>Dashboard</span></div>
-          <h1 className={styles.topbarTitle}>Asistencias Deporte</h1>
+          <h1 className={styles.topbarTitle}>Asistencias Grupos Deportivos</h1>
         </div>
         <GlowingButton glowColor="#2563EB" className={styles.openBtn} onClick={handleOpen}>
           <ExternalIcon /> Abrir Asistencias Deporte
