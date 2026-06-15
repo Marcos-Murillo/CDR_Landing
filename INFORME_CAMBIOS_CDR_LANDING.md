@@ -1,8 +1,8 @@
 # Informe de Cambios del Ecosistema CDR Landing
 
-**Fecha de corte:** 15 de junio de 2026  
-**Repositorio central:** `CDR_Landing`  
-**Periodo revisado:** commits disponibles entre el 1 de mayo y el 15 de junio de 2026, mas el estado actual de integracion declarado en CDR Landing.  
+**Fecha de corte:** 15 de junio de 2026
+**Repositorio central:** `CDR_Landing`
+**Periodo revisado:** commits disponibles entre el 1 de mayo y el 15 de junio de 2026, mas el estado actual de integracion declarado en CDR Landing.
 **Objetivo:** consolidar de forma profesional los cambios realizados en las aplicaciones relacionadas con CDR Landing, identificar funcionalidades agregadas y proponer mejoras para fortalecer el ecosistema.
 
 ---
