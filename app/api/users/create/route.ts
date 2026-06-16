@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
       platforms,
       platformRoles: platformRoles ?? {},
       platformConfig: platformConfig ?? {},
+      temporaryPassword: password,
       createdAt: FieldValue.serverTimestamp(),
       createdBy: 'superadmin',
     }

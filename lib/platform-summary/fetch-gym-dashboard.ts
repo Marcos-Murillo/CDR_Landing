@@ -2,17 +2,16 @@ import type { Firestore } from 'firebase-admin/firestore'
 import { computeGymCduSummary } from '@/app/api/platforms/gym-cdu-summary/compute'
 import {
   countDocuments,
+  fetchDocumentsByIds,
   querySinceDateString,
-  scanCollectionFields,
   sixMonthDateString,
 } from '@/lib/firestore-dashboard-queries'
 
 export async function fetchGymCduDashboardSummary(db: Firestore) {
   const sinceStr = sixMonthDateString()
 
-  const [totalUsuarios, usersRows, entryRows] = await Promise.all([
+  const [totalUsuarios, entryRows] = await Promise.all([
     countDocuments(db, 'users'),
-    scanCollectionFields(db, 'users', ['genero', 'estamento', 'facultad']),
     querySinceDateString(db, 'entries', 'fecha', sinceStr, [
       'usuarioId',
       'fecha',
@@ -21,7 +20,16 @@ export async function fetchGymCduDashboardSummary(db: Firestore) {
     ]),
   ])
 
-  const users = usersRows.map((d) => ({
+  const userIds = [
+    ...new Set(
+      entryRows
+        .map((d) => String(d.usuarioId ?? ''))
+        .filter(Boolean),
+    ),
+  ]
+
+  const userMap = await fetchDocumentsByIds(db, 'users', userIds)
+  const users = [...userMap.values()].map((d) => ({
     genero: String(d.genero ?? ''),
     estamento: String(d.estamento ?? ''),
     facultad: String(d.facultad ?? ''),

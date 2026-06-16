@@ -39,21 +39,12 @@ function mapLoan(data: FirebaseFirestore.DocumentData) {
 async function fetchLoansForDashboard(db: Firestore) {
   const since = getDashboardWindowStart(6)
 
-  let recent: FirebaseFirestore.DocumentData[]
-  try {
-    recent = await querySinceTimestamp(db, 'loans', 'loanDate', since, [...LOAN_FIELDS])
-  } catch {
-    const all = await scanCollectionFields(db, 'loans', [...LOAN_FIELDS])
-    recent = all.filter((d) => {
-      const dt = parseFirestoreDate(d.loanDate)
-      return dt && dt >= since
-    })
-  }
+  const recent = await querySinceTimestamp(db, 'loans', 'loanDate', since, [...LOAN_FIELDS])
 
   const activeSnap = await db
     .collection('loans')
     .where('status', '==', 'active')
-    .select('loanDate', 'status', 'itemId', 'itemName')
+    .select(...LOAN_FIELDS)
     .get()
 
   const activeLoans = activeSnap.docs.map((d) => mapLoan(d.data()))

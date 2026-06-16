@@ -138,8 +138,7 @@ function redirectByRole(
   if (role === 'superadmin') {
     router.push('/superadmin')
   } else if (role === 'admin') {
-    if (area === 'deporte') router.push('/dashboard/asistencias-deporte')
-    else router.push('/dashboard')
+    router.push('/dashboard')
   } else {
     router.push('/monitor')
   }

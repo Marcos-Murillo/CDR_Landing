@@ -16,7 +16,6 @@ function getActiveSection(pathname: string): string {
   if (pathname.startsWith('/dashboard/stock-cdu')) return 'stock-cdu'
   if (pathname.startsWith('/dashboard/stock-cultura')) return 'stock-cultura'
   if (pathname.startsWith('/dashboard/gym-cdu')) return 'gym-cdu'
-  if (pathname.startsWith('/dashboard/asistencias-deporte')) return 'asistencias'
   if (pathname.startsWith('/dashboard/plataformas')) return 'plataformas'
   return 'asistencias'
 }
@@ -103,10 +102,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
     user.area === 'cultura' ||
     user.area === 'deporte'
 
-  const asistenciasHref =
-    user.area === 'deporte'
-      ? '/dashboard/asistencias-deporte'
-      : '/dashboard'
+  const asistenciasHref = '/dashboard'
   const hasStockCultura = user.platforms.includes('stock_cultura')
   const hasStockCdu     = user.platforms.includes('stock_cdu')
   const hasGymCdu       = user.platforms.includes('gym_cdu')

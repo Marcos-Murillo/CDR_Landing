@@ -116,37 +116,41 @@ export default function DashboardPage() {
   const [fetching, setFetching] = useState(true)
   const [error, setError] = useState('')
 
+  const deporteView = user?.area === 'deporte'
+
   const fetchData = useCallback(async () => {
-    if (!auth.currentUser) return
+    if (!auth.currentUser || !user) return
+    const deporte = user.area === 'deporte'
     setFetching(true); setError('')
     try {
       const idToken = await auth.currentUser.getIdToken()
-      const res = await fetch('/api/platforms/asistencias-cultura', {
+      const endpoint = deporte
+        ? '/api/platforms/asistencias-deporte-summary'
+        : '/api/platforms/asistencias-cultura'
+      const res = await fetch(endpoint, {
         headers: { Authorization: `Bearer ${idToken}` }, cache: 'no-store',
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       setData(await res.json())
     } catch { setError('No se pudieron cargar los datos.') }
     finally { setFetching(false) }
-  }, [])
+  }, [user])
 
   useEffect(() => { if (user?.role === 'admin') fetchData() }, [user, fetchData])
 
   useEffect(() => {
     if (!user) return
-    // Superadmin siempre va a su página
-    if (user.role === 'superadmin') { router.replace('/superadmin'); return }
-    // Admin de deporte va a asistencias-deporte
-    if (user.area === 'deporte') { router.replace('/dashboard/asistencias-deporte'); return }
+    if (user.role === 'superadmin') router.replace('/superadmin')
   }, [user, router])
 
   const handleOpenAsistencias = async () => {
     if (!user) return
     const url = process.env.NEXT_PUBLIC_URL_ASISTENCIAS || 'https://asistencia-cultura.vercel.app'
+    const platform = deporteView ? 'asistencias_deporte' : 'asistencias_cultura'
     try {
       const res = await fetch('/api/auth/sso-token', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid: user.uid, platform: 'asistencias_cultura' }),
+        body: JSON.stringify({ uid: user.uid, platform }),
       })
       const d = await res.json()
       if (res.ok && d.token) { window.open(`${url}/auth/sso?token=${d.token}&redirect=/usuarios`, '_blank'); return }
@@ -171,10 +175,12 @@ export default function DashboardPage() {
       <header className={styles.topbar}>
         <div className={styles.topbarLeft}>
           <div className={styles.topbarEyebrow}><span className={styles.eyebrowLine} /><span>Dashboard</span></div>
-          <h1 className={styles.topbarTitle}>Asistencias</h1>
+          <h1 className={styles.topbarTitle}>
+            {deporteView ? 'Asistencias Grupos Deportivos' : 'Asistencias'}
+          </h1>
         </div>
         <GlowingButton glowColor="#2563EB" className={styles.openBtn} onClick={handleOpenAsistencias}>
-          <ExternalIcon /> Abrir Asistencias
+          <ExternalIcon /> {deporteView ? 'Abrir Asistencias Deporte' : 'Abrir Asistencias'}
         </GlowingButton>
       </header>
 

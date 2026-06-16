@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { SuperadminSidebar } from '@/components/superadmin-sidebar'
@@ -25,6 +25,7 @@ import {
   emptyAccessFormValues,
   type UserAccessFormValues,
 } from '@/components/superadmin/user-access-form'
+import { superadminFetch } from '@/lib/superadmin-fetch'
 import { GlowingButton } from '@/components/ui/glowing-button'
 import styles from './superadmin.module.css'
 
@@ -122,6 +123,60 @@ function ExternalIcon() {
     </svg>
   )
 }
+function EyeIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 15 15" fill="none">
+      <path d="M1 7.5C1 7.5 3.5 2.5 7.5 2.5C11.5 2.5 14 7.5 14 7.5C14 7.5 11.5 12.5 7.5 12.5C3.5 12.5 1 7.5 1 7.5Z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="7.5" cy="7.5" r="2" stroke="currentColor" strokeWidth="1.3"/>
+    </svg>
+  )
+}
+function SearchIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.4"/>
+      <path d="M10.5 10.5L14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function normalizeSearchText(value: string): string {
+  return value.trim().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
+}
+
+function matchesUserSearch(user: CreatedUser, query: string): boolean {
+  const trimmed = query.trim()
+  if (!trimmed) return true
+
+  const nameMatch = normalizeSearchText(user.displayName).includes(normalizeSearchText(trimmed))
+  const digits = trimmed.replace(/\D/g, '')
+  const cedulaMatch =
+    digits.length > 0 && (user.cedula ?? '').replace(/\D/g, '').includes(digits)
+
+  return nameMatch || cedulaMatch
+}
+
+interface UserDetail {
+  id: string
+  email: string
+  displayName: string
+  role: string
+  area: string
+  platforms: string[]
+  platformRoles: Record<string, string>
+  platformConfig: Record<string, Record<string, string>>
+  cedula: string
+  sede: string
+  temporaryPassword: string | null
+  createdAt: string | null
+  createdBy: string | null
+  auth: {
+    emailVerified: boolean
+    disabled: boolean
+    lastSignIn: string | null
+    createdAt: string | null
+  } | null
+}
 
 // ── Page ───────────────────────────────────────────────────────────────────
 export default function SuperAdminPage() {
@@ -162,6 +217,17 @@ export default function SuperAdminPage() {
   const [isEditSubmitting, setIsEditSubmitting] = useState(false)
   const [editError, setEditError]           = useState('')
   const [openDropdown, setOpenDropdown]     = useState<string | null>(null)
+  const [viewingUser, setViewingUser]       = useState<CreatedUser | null>(null)
+  const [userDetail, setUserDetail]         = useState<UserDetail | null>(null)
+  const [loadingDetail, setLoadingDetail]   = useState(false)
+  const [detailError, setDetailError]       = useState('')
+  const [showDetailPassword, setShowDetailPassword] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredUsers = useMemo(
+    () => users.filter((u) => matchesUserSearch(u, searchQuery)),
+    [users, searchQuery],
+  )
 
   useEffect(() => {
     if (loading) return
@@ -235,6 +301,44 @@ export default function SuperAdminPage() {
       if (!res.ok) throw new Error()
       setUsers((prev) => prev.filter((u) => u.id !== id))
     } catch { setError('Error al eliminar el usuario.') }
+  }
+
+  const openUserDetail = async (u: CreatedUser) => {
+    setViewingUser(u)
+    setUserDetail(null)
+    setDetailError('')
+    setShowDetailPassword(false)
+    setOpenDropdown(null)
+    setLoadingDetail(true)
+    try {
+      const res = await superadminFetch(`/api/users/detail?uid=${encodeURIComponent(u.id)}`)
+      const data = await res.json()
+      if (!res.ok) {
+        setDetailError(data.error ?? 'No se pudo cargar el detalle.')
+        return
+      }
+      setUserDetail(data as UserDetail)
+    } catch {
+      setDetailError('Error de conexión.')
+    } finally {
+      setLoadingDetail(false)
+    }
+  }
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setSuccess('Copiado al portapapeles.')
+    } catch {
+      setError('No se pudo copiar.')
+    }
+  }
+
+  const closeUserDetail = () => {
+    setViewingUser(null)
+    setUserDetail(null)
+    setDetailError('')
+    setShowDetailPassword(false)
   }
 
   const openEdit = (u: CreatedUser) => {
@@ -311,25 +415,57 @@ export default function SuperAdminPage() {
           {/* Users table */}
           <div className={styles.tableCard}>
             <div className={styles.tableHeader}>
-              <h2 className={styles.tableTitle}>Usuarios registrados</h2>
-              <span className={styles.tableCount}>{users.length} usuarios</span>
+              <div className={styles.tableHeaderMain}>
+                <h2 className={styles.tableTitle}>Usuarios registrados</h2>
+                <span className={styles.tableCount}>
+                  {searchQuery.trim()
+                    ? `${filteredUsers.length} de ${users.length} usuarios`
+                    : `${users.length} usuarios`}
+                </span>
+              </div>
+              <div className={styles.tableSearch}>
+                <SearchIcon />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar por nombre o cédula..."
+                  className={styles.tableSearchInput}
+                  aria-label="Buscar usuarios por nombre o cédula"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    className={styles.tableSearchClear}
+                    onClick={() => setSearchQuery('')}
+                    aria-label="Limpiar búsqueda"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
             </div>
             {loadingUsers ? (
               <div className={styles.emptyState}>Cargando usuarios...</div>
             ) : users.length === 0 ? (
               <div className={styles.emptyState}>No hay usuarios creados aún.</div>
+            ) : filteredUsers.length === 0 ? (
+              <div className={styles.emptyState}>
+                No se encontraron usuarios para &quot;{searchQuery.trim()}&quot;.
+              </div>
             ) : (
               <div className={styles.tableWrapper}>
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th>Nombre</th><th>Correo</th><th>Rol</th><th>Área</th><th>Plataformas</th><th>Creado</th><th></th>
+                      <th>Nombre</th><th>Cédula</th><th>Correo</th><th>Rol</th><th>Área</th><th>Plataformas</th><th>Creado</th><th></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((u) => (
+                    {filteredUsers.map((u) => (
                       <tr key={u.id}>
                         <td className={styles.tdUsername}>{u.displayName}</td>
+                        <td className={styles.tdMuted}>{u.cedula || '—'}</td>
                         <td className={styles.tdMuted}>{u.email}</td>
                         <td><span className={`${styles.roleBadge} ${styles[u.role]}`}>{getRoleLabel(u.role)}</span></td>
                         <td>{getAreaLabel(u.area)}</td>
@@ -342,6 +478,7 @@ export default function SuperAdminPage() {
                             </button>
                             {openDropdown === u.id && (
                               <div className={styles.dropdown}>
+                                <button className={styles.dropdownItem} onClick={() => openUserDetail(u)}><EyeIcon /><span>Ver datos completos</span></button>
                                 <button className={styles.dropdownItem} onClick={() => openEdit(u)}><EditIcon /><span>Editar</span></button>
                                 <button className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`} onClick={() => { handleDelete(u.id); setOpenDropdown(null) }}><TrashIcon /><span>Eliminar</span></button>
                               </div>
@@ -441,6 +578,111 @@ export default function SuperAdminPage() {
                 <button type="submit" className={styles.submitButton} disabled={isEditSubmitting}>{isEditSubmitting ? 'Guardando...' : 'Guardar cambios'}</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── MODAL: Ver datos completos ── */}
+      {viewingUser && (
+        <div className={styles.drawerBackdrop} onClick={closeUserDetail}>
+          <div className={styles.drawer} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.drawerHeader}>
+              <div>
+                <h2 className={styles.drawerTitle}>Datos del usuario</h2>
+                <p className={styles.drawerSubtitle}>{viewingUser.displayName}</p>
+              </div>
+              <button className={styles.drawerClose} onClick={closeUserDetail} type="button">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 4L14 14M14 4L4 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
+              </button>
+            </div>
+
+            <div className={styles.detailBody}>
+              {loadingDetail && <p className={styles.detailValueMuted}>Cargando...</p>}
+              {detailError && <div className={styles.errorAlert}><AlertIcon /><span>{detailError}</span></div>}
+              {userDetail && (
+                <>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>UID</span>
+                    <span className={styles.detailValue}>{userDetail.id}</span>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Nombre</span>
+                    <span className={styles.detailValue}>{userDetail.displayName || '—'}</span>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Correo</span>
+                    <div className={styles.detailPasswordRow}>
+                      <span className={styles.detailValue}>{userDetail.email || '—'}</span>
+                      {userDetail.email && (
+                        <button type="button" className={styles.detailCopyBtn} onClick={() => copyToClipboard(userDetail.email)}>Copiar</button>
+                      )}
+                    </div>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Contraseña</span>
+                    {userDetail.temporaryPassword ? (
+                      <div className={styles.detailPasswordRow}>
+                        <span className={styles.detailValue}>
+                          {showDetailPassword ? userDetail.temporaryPassword : '••••••••'}
+                        </span>
+                        <button type="button" className={styles.detailCopyBtn} onClick={() => setShowDetailPassword((v) => !v)}>
+                          {showDetailPassword ? 'Ocultar' : 'Mostrar'}
+                        </button>
+                        <button type="button" className={styles.detailCopyBtn} onClick={() => copyToClipboard(userDetail.temporaryPassword!)}>Copiar</button>
+                      </div>
+                    ) : (
+                      <span className={styles.detailValueMuted}>
+                        No registrada (usuario creado antes de guardar contraseñas o restablecida manualmente).
+                      </span>
+                    )}
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Rol / Área</span>
+                    <span className={styles.detailValue}>{getRoleLabel(userDetail.role as CdrRole)} · {getAreaLabel(userDetail.area as UserArea)}</span>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Cédula</span>
+                    <span className={styles.detailValue}>{userDetail.cedula || '—'}</span>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Sede</span>
+                    <span className={styles.detailValue}>{userDetail.sede || '—'}</span>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Plataformas</span>
+                    <span className={styles.detailValue}>{getPlatNames(userDetail.platforms) || '—'}</span>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Roles por plataforma</span>
+                    <pre className={styles.detailJson}>{JSON.stringify(userDetail.platformRoles, null, 2)}</pre>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Configuración por plataforma</span>
+                    <pre className={styles.detailJson}>{JSON.stringify(userDetail.platformConfig, null, 2)}</pre>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Creado</span>
+                    <span className={styles.detailValue}>
+                      {userDetail.createdAt ? new Date(userDetail.createdAt).toLocaleString('es-CO') : '—'}
+                      {userDetail.createdBy ? ` · por ${userDetail.createdBy}` : ''}
+                    </span>
+                  </div>
+                  {userDetail.auth && (
+                    <div className={styles.detailRow}>
+                      <span className={styles.detailLabel}>Firebase Auth</span>
+                      <span className={styles.detailValue}>
+                        {userDetail.auth.disabled ? 'Deshabilitado' : 'Activo'}
+                        {' · '}
+                        {userDetail.auth.emailVerified ? 'Email verificado' : 'Email sin verificar'}
+                        {userDetail.auth.lastSignIn
+                          ? ` · Último acceso: ${new Date(userDetail.auth.lastSignIn).toLocaleString('es-CO')}`
+                          : ''}
+                      </span>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}

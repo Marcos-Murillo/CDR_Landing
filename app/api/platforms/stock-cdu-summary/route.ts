@@ -33,44 +33,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (stale) return NextResponse.json(stale)
 
     if (msg.includes('RESOURCE_EXHAUSTED') || msg.includes('Quota')) {
-      return NextResponse.json(getMockData())
+      return NextResponse.json({ error: 'Cuota Firebase agotada. Los datos en caché no están disponibles.' }, { status: 503 })
     }
     return NextResponse.json({ error: msg }, { status: 502 })
-  }
-}
-
-function getMockData() {
-  const now = new Date()
-  return {
-    totalPrestamos: 520, prestamosActivos: 24, itemsDisponibles: 68, itemsTotal: 92,
-    prestamosMesActual: 45, prestamosMesAnterior: 38, prestamosVencidos: 5, tasaDevolucion: 91,
-    top5Items: [
-      { nombre: 'Balón de Fútbol', total: 90, totalMesAnterior: 80 },
-      { nombre: 'Raqueta de Tenis', total: 70, totalMesAnterior: 75 },
-      { nombre: 'Balón de Baloncesto', total: 60, totalMesAnterior: 55 },
-      { nombre: 'Malla de Voleibol', total: 40, totalMesAnterior: 35 },
-      { nombre: 'Conos de Entrenamiento', total: 35, totalMesAnterior: 40 },
-    ],
-    top3Facultades: [
-      { nombre: 'Ingeniería', total: 120, totalMesAnterior: 100 },
-      { nombre: 'Ciencias Naturales', total: 95, totalMesAnterior: 90 },
-      { nombre: 'Humanidades', total: 80, totalMesAnterior: 85 },
-    ],
-    top3Programas: [
-      { nombre: 'Ingeniería de Sistemas', total: 65, totalMesAnterior: 55 },
-      { nombre: 'Biología', total: 50, totalMesAnterior: 48 },
-      { nombre: 'Licenciatura en Educación Física', total: 45, totalMesAnterior: 50 },
-    ],
-    itemsConDanos: [
-      { nombre: 'Balón de Fútbol', reportes: 4, severidad: 'medium' },
-      { nombre: 'Raqueta de Tenis', reportes: 2, severidad: 'low' },
-    ],
-    porGenero: { MASCULINO: 310, FEMENINO: 190, OTRO: 20 },
-    porEstamento: { ESTUDIANTE: 420, DOCENTE: 60, FUNCIONARIO: 40 },
-    tendencia6Meses: Array.from({ length: 6 }, (_, i) => {
-      const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1)
-      return { mes: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`, total: 30 + i * 4 }
-    }),
-    rawDates: [],
   }
 }

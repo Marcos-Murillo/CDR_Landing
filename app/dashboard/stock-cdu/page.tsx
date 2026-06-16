@@ -135,9 +135,12 @@ export default function StockCduPage() {
     try {
       const idToken = await auth.currentUser.getIdToken()
       const res = await fetch('/api/platforms/stock-cdu-summary', { headers: { Authorization: `Bearer ${idToken}` }, cache: 'no-store' })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      setData(await res.json())
-    } catch { setError('No se pudieron cargar los datos.') }
+      const body = await res.json()
+      if (!res.ok) throw new Error(body.error ?? `HTTP ${res.status}`)
+      setData(body)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'No se pudieron cargar los datos.')
+    }
     finally { setFetching(false) }
   }, [])
 
@@ -173,6 +176,16 @@ export default function StockCduPage() {
       <main className={styles.main}>
           {fetching && <SkeletonDashboard />}
           {!fetching && error && <div className={styles.errorBox}><p className={styles.errorText}>{error}</p><button className={styles.retryBtn} onClick={fetchData}>Reintentar</button></div>}
+          {!fetching && data && (data as { staleSnapshot?: boolean }).staleSnapshot && (
+            <div className={styles.errorBox} style={{ borderColor: '#f59e0b', background: '#fffbeb' }}>
+              <p className={styles.errorText} style={{ color: '#92400e' }}>
+                Datos en caché por cuota Firebase agotada
+                {(data as { cacheAgeMinutes?: number }).cacheAgeMinutes != null
+                  ? ` (hace ${(data as { cacheAgeMinutes?: number }).cacheAgeMinutes} min)`
+                  : ''}.
+              </p>
+            </div>
+          )}
 
           {!fetching && data && (
             <>
