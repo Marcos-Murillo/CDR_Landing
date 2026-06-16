@@ -12,6 +12,7 @@ import {
   SUPERADMIN_PLATFORM_URLS,
   SUPERADMIN_SSO_REDIRECT,
 } from '@/lib/superadmin-platforms'
+import { bitacoraRedirectPath } from '@/lib/bitacora-sso'
 import {
   type CdrRole,
   type StaffSede,
@@ -198,7 +199,18 @@ export default function SuperAdminPage() {
     try {
       const res  = await fetch('/api/auth/sso-token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid, platform: platformId }) })
       const data = await res.json()
-      if (res.ok && data.token) { window.open(`${url}/auth/sso?token=${data.token}&redirect=${SUPERADMIN_SSO_REDIRECT[platformId] ?? '/'}`, '_blank'); return }
+      if (res.ok && data.token) {
+        const baseRedirect = SUPERADMIN_SSO_REDIRECT[platformId] ?? '/'
+        const redirect =
+          platformId === 'bitacoraac'
+            ? bitacoraRedirectPath(baseRedirect, 'all')
+            : baseRedirect
+        window.open(
+          `${url}/auth/sso?token=${data.token}&redirect=${encodeURIComponent(redirect)}`,
+          '_blank',
+        )
+        return
+      }
     } catch { /* fallback */ }
     window.open(url, '_blank')
   }

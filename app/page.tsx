@@ -8,16 +8,19 @@ import { GlowingButton } from '@/components/ui/glowing-button'
 import { BorderBeam } from '@/components/ui/border-beam'
 import { CursorCard, CursorCardsContainer } from '@/components/ui/cursor-cards'
 import { STOCK_CDU_SANFER_BASE_URL } from '@/lib/stock-cdu-sanfer-url'
+import { bitacoraPublicUrl } from '@/lib/bitacora-sso'
 import styles from './page.module.css'
+
+const BITACORA_BASE = process.env.NEXT_PUBLIC_URL_BITACORA ?? '/login'
 
 const PLATFORMS = [
   {
     id: 'bitacoraac',
     name: 'Bitácora',
-    description: 'Registro de actividades, seguimiento de tareas y control de asistencia de monitores del área de cultura.',
-    area: 'cultura',
+    description: 'Registro de actividades, seguimiento de tareas y control de asistencia para Cultura y Deporte.',
+    area: 'all',
     tags: ['Actividades', 'Asistencia', 'Monitores'],
-    url: process.env.NEXT_PUBLIC_URL_BITACORA ?? '/login',
+    url: bitacoraPublicUrl(BITACORA_BASE, 'cultura'),
   },
   {
     id: 'bitacora_comunicaciones',
@@ -89,7 +92,10 @@ const PLATFORMS = [
     description: 'Registro de actividades, seguimiento de tareas y gestión de estados para monitores del área de deporte.',
     area: 'deporte',
     tags: ['Actividades', 'Tareas', 'Monitores'],
-    url: process.env.NEXT_PUBLIC_URL_BITACORA_CDU ?? process.env.NEXT_PUBLIC_URL_BITACORA ?? '/login',
+    url: bitacoraPublicUrl(
+      process.env.NEXT_PUBLIC_URL_BITACORA_CDU ?? BITACORA_BASE,
+      'deporte',
+    ),
   },
 ]
 

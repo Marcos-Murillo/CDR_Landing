@@ -12,6 +12,7 @@ import {
   SUPERADMIN_PLATFORM_URLS,
   SUPERADMIN_SSO_REDIRECT,
 } from '@/lib/superadmin-platforms'
+import { bitacoraRedirectPath } from '@/lib/bitacora-sso'
 import styles from '@/app/superadmin/superadmin.module.css'
 
 function LogOutIcon() {
@@ -61,8 +62,13 @@ export function SuperadminSidebar() {
       })
       const data = await res.json()
       if (res.ok && data.token) {
+        const baseRedirect = SUPERADMIN_SSO_REDIRECT[platformId] ?? '/'
+        const redirect =
+          platformId === 'bitacoraac'
+            ? bitacoraRedirectPath(baseRedirect, 'all')
+            : baseRedirect
         window.open(
-          `${url}/auth/sso?token=${data.token}&redirect=${SUPERADMIN_SSO_REDIRECT[platformId] ?? '/'}`,
+          `${url}/auth/sso?token=${data.token}&redirect=${encodeURIComponent(redirect)}`,
           '_blank'
         )
         return

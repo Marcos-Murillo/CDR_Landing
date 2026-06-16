@@ -18,8 +18,8 @@ import styles from './login.module.css'
 const MODULES = [
   {
     name: 'Bitácora AC',
-    tagline: 'Registro de actividades y asistencia de monitores',
-    area: 'Cultura',
+    tagline: 'Actividades y seguimiento para Cultura y Deporte',
+    area: 'Multi-área',
     icon: (
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
         <path d="M6 4h8M6 8h8M6 12h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>

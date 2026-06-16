@@ -9,14 +9,15 @@ import { useAuth } from '@/hoocks/use-auth'
 import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
 import { STOCK_CDU_SANFER_BASE_URL } from '@/lib/stock-cdu-sanfer-url'
 import LogoIcon from '@/components/logo-icon'
+import { bitacoraRedirectPath } from '@/lib/bitacora-sso'
 import styles from './monitor.module.css'
 
 const ALL_MODULES = [
   {
     id: 'bitacoraac',
     name: 'Bitácora AC',
-    description: 'Registro de actividades y control de asistencia de monitores del área cultural.',
-    area: 'cultura',
+    description: 'Registro de actividades y seguimiento de tareas para Cultura y Deporte.',
+    area: 'all',
     url: process.env.NEXT_PUBLIC_URL_BITACORA ?? '#',
     sso: true,
     icon: 'clipboard',
@@ -236,8 +237,15 @@ export default function MonitorPage() {
         })
         const data = await res.json()
         if (res.ok && data.token) {
-          const redirect = SSO_REDIRECT[mod.id] ?? '/'
-          window.open(`${mod.url}/auth/sso?token=${data.token}&redirect=${redirect}`, '_blank')
+          const baseRedirect = SSO_REDIRECT[mod.id] ?? '/'
+          const redirect =
+            mod.id === 'bitacoraac'
+              ? bitacoraRedirectPath(baseRedirect, user.area)
+              : baseRedirect
+          window.open(
+            `${mod.url}/auth/sso?token=${data.token}&redirect=${encodeURIComponent(redirect)}`,
+            '_blank'
+          )
           return
         }
       } catch { /* fallback */ }
@@ -262,6 +270,14 @@ export default function MonitorPage() {
     }
     if (m.id === 'prestamos_escenarios') {
       return user.area === 'deporte' || user.area === 'all' || user.platforms.includes(m.id)
+    }
+    if (m.id === 'bitacoraac') {
+      return (
+        user.area === 'cultura' ||
+        user.area === 'deporte' ||
+        user.area === 'all' ||
+        user.platforms.includes(m.id)
+      )
     }
     return user.platforms.includes(m.id)
   })

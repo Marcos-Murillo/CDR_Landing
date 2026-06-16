@@ -68,13 +68,14 @@ export const PLATFORM_ACCESS: PlatformAccessDefinition[] = [
   {
     id: 'bitacoraac',
     name: 'Bitácora AC',
-    area: 'cultura',
-    grantMode: 'manual',
+    area: 'both',
+    grantMode: 'area',
     defaultRoles: { admin: 'admin', monitor: 'guest', superadmin: 'superadmin' },
     fields: [
       {
         kind: 'info',
-        message: 'Usa el rol CDR: Administrador → admin en Bitácora; Monitor → invitado (guest).',
+        message:
+          'Acceso automático para Cultura, Deporte y Multi-área. Cada dependencia ve su propia base de datos. Rol CDR: Administrador → admin; Monitor → invitado (guest).',
       },
     ],
   },
@@ -272,7 +273,7 @@ export function platformMatchesUserArea(platformArea: PlatformArea, userArea: Us
 
 export function areaAutoPlatformsFor(userArea: UserArea): PlatformAccessDefinition[] {
   if (userArea === 'all') return AREA_PLATFORMS
-  return AREA_PLATFORMS.filter((p) => p.area === userArea)
+  return AREA_PLATFORMS.filter((p) => p.area === userArea || p.area === 'both')
 }
 
 export function requiresCedula(platforms: string[]): boolean {

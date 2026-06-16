@@ -78,13 +78,18 @@ export async function POST(req: NextRequest) {
     const areaMatchesPrestamos =
       profile.area === 'deporte' || profile.area === 'all'
 
+    const isBitacoraPlatform = platform === 'bitacoraac'
+    const areaMatchesBitacora =
+      profile.area === 'cultura' || profile.area === 'deporte' || profile.area === 'all'
+
     const hasAccess =
       isSuperadmin ||
       profile.platforms?.includes(platform) ||
       profile.area === 'all' ||
       (isAsistenciasPlatform && areaMatchesAsistencias) ||
       (isHorariosPlatform && areaMatchesHorarios) ||
-      (isPrestamosPlatform && areaMatchesPrestamos)
+      (isPrestamosPlatform && areaMatchesPrestamos) ||
+      (isBitacoraPlatform && areaMatchesBitacora)
 
     if (!hasAccess) {
       return NextResponse.json({ error: 'Sin acceso a esta plataforma.' }, { status: 403 })

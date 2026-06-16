@@ -2,7 +2,7 @@ import { PRESTAMOS_ESCENARIOS_BASE_URL } from './prestamos-escenarios-url'
 import { STOCK_CDU_SANFER_BASE_URL } from './stock-cdu-sanfer-url'
 
 export const SUPERADMIN_PLATFORMS = [
-  { id: 'bitacoraac', name: 'Bitácora AC', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_BITACORA' },
+  { id: 'bitacoraac', name: 'Bitácora AC', area: 'Cultura y Deporte', envKey: 'NEXT_PUBLIC_URL_BITACORA' },
   { id: 'bitacora_comunicaciones', name: 'Bitácora COM', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES' },
   { id: 'stock_cultura', name: 'Stock Cultura', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_INVENTARIO_CULTURA' },
   { id: 'horarios', name: 'Horarios Cultura', area: 'Cultura', envKey: 'NEXT_PUBLIC_URL_HORARIOS' },

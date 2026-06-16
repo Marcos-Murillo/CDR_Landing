@@ -3,12 +3,13 @@
 import { PRESTAMOS_ESCENARIOS_BASE_URL } from '@/lib/prestamos-escenarios-url'
 import { STOCK_CDU_SANFER_BASE_URL } from '@/lib/stock-cdu-sanfer-url'
 import { SUPERADMIN_SSO_REDIRECT } from '@/lib/superadmin-platforms'
+import { bitacoraRedirectPath } from '@/lib/bitacora-sso'
 import { useAuth } from '@/hoocks/use-auth'
 import { GlowingButton } from '@/components/ui/glowing-button'
 import styles from './plataformas.module.css'
 
 const ALL_MODULES = [
-  { id: 'bitacoraac', name: 'Bitácora', description: 'Registro de actividades, seguimiento de tareas y control de asistencia de monitores del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_BITACORA || '#', icon: 'clipboard' },
+  { id: 'bitacoraac', name: 'Bitácora', description: 'Registro de actividades, seguimiento de tareas y control de asistencia para Cultura y Deporte.', area: 'all', url: process.env.NEXT_PUBLIC_URL_BITACORA || '#', icon: 'clipboard' },
   { id: 'bitacora_comunicaciones', name: 'Bitácora COM', description: 'Registro y seguimiento de actividades del área de comunicaciones de la sección.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_BITACORA_COMUNICACIONES || '#', icon: 'clipboard' },
   { id: 'stock_cultura', name: 'Stock Cultura', description: 'Gestión de inventario de instrumentos, materiales y recursos del área cultural.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_INVENTARIO_CULTURA || '#', icon: 'box' },
   { id: 'horarios', name: 'Horarios Cultura', description: 'Consulta de horarios de grupos culturales: danza, musica, teatro y mas.', area: 'cultura', url: process.env.NEXT_PUBLIC_URL_HORARIOS || '#', icon: 'calendar' },
@@ -64,7 +65,12 @@ export default function PlataformasPage() {
         })
         const data = await res.json()
         if (res.ok && data.token) {
-          window.open(`${module.url}/auth/sso?token=${data.token}&redirect=${SSO_PLATFORMS[module.id]}`, '_blank')
+          const baseRedirect = SSO_PLATFORMS[module.id] ?? '/'
+          const redirect =
+            module.id === 'bitacoraac'
+              ? bitacoraRedirectPath(baseRedirect, user.area)
+              : baseRedirect
+          window.open(`${module.url}/auth/sso?token=${data.token}&redirect=${encodeURIComponent(redirect)}`, '_blank')
           return
         }
       } catch { /* fallback */ }
@@ -91,6 +97,14 @@ export default function PlataformasPage() {
     }
     if (m.id === 'prestamos_escenarios') {
       return user.area === 'deporte' || user.area === 'all' || user.platforms.includes(m.id)
+    }
+    if (m.id === 'bitacoraac') {
+      return (
+        user.area === 'cultura' ||
+        user.area === 'deporte' ||
+        user.area === 'all' ||
+        user.platforms.includes(m.id)
+      )
     }
     return user.platforms.includes(m.id)
   })
