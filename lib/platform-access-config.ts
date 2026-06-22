@@ -57,8 +57,8 @@ export interface PlatformAccessDefinition {
   id: PlatformId
   name: string
   area: PlatformArea
-  /** manual = debe estar en platforms[]; area = acceso automático por área del usuario */
-  grantMode: 'manual' | 'area'
+  /** Todas las plataformas requieren asignación explícita en platforms[] desde super admin */
+  grantMode: 'manual'
   /** Rol por defecto según rol CDR (si no hay platformRoles override) */
   defaultRoles: { admin: string; monitor: string; superadmin?: string }
   fields: PlatformField[]
@@ -69,13 +69,13 @@ export const PLATFORM_ACCESS: PlatformAccessDefinition[] = [
     id: 'bitacoraac',
     name: 'Bitácora AC',
     area: 'both',
-    grantMode: 'area',
+    grantMode: 'manual',
     defaultRoles: { admin: 'admin', monitor: 'guest', superadmin: 'superadmin' },
     fields: [
       {
         kind: 'info',
         message:
-          'Acceso automático para Cultura, Deporte y Multi-área. Cada dependencia ve su propia base de datos. Rol CDR: Administrador → admin; Monitor → invitado (guest).',
+          'Asignación manual. Cada dependencia ve su propia base de datos. Rol CDR: Administrador → admin; Monitor → invitado (guest).',
       },
     ],
   },
@@ -109,12 +109,12 @@ export const PLATFORM_ACCESS: PlatformAccessDefinition[] = [
     id: 'horarios',
     name: 'Horarios Cultura',
     area: 'cultura',
-    grantMode: 'area',
+    grantMode: 'manual',
     defaultRoles: { admin: 'admin', monitor: 'monitor', superadmin: 'admin' },
     fields: [
       {
         kind: 'info',
-        message: 'Acceso automático si el área del usuario es Cultura o Multi-área. No requiere asignación manual.',
+        message: 'Asignación manual desde super admin.',
       },
     ],
   },
@@ -122,12 +122,12 @@ export const PLATFORM_ACCESS: PlatformAccessDefinition[] = [
     id: 'asistencias_cultura',
     name: 'Asistencias Cultura',
     area: 'cultura',
-    grantMode: 'area',
+    grantMode: 'manual',
     defaultRoles: { admin: 'ADMIN', monitor: 'MONITOR', superadmin: 'SUPER_ADMIN' },
     fields: [
       {
         kind: 'info',
-        message: 'Acceso automático si el área es Cultura o Multi-área. Roles: ADMIN / MONITOR según rol CDR.',
+        message: 'Asignación manual. Roles: ADMIN / MONITOR según rol CDR.',
       },
     ],
   },
@@ -186,12 +186,12 @@ export const PLATFORM_ACCESS: PlatformAccessDefinition[] = [
     id: 'horarios_cdu',
     name: 'Horarios CDU',
     area: 'deporte',
-    grantMode: 'area',
+    grantMode: 'manual',
     defaultRoles: { admin: 'admin', monitor: 'monitor', superadmin: 'admin' },
     fields: [
       {
         kind: 'info',
-        message: 'Acceso automático si el área es Deporte o Multi-área.',
+        message: 'Asignación manual desde super admin.',
       },
     ],
   },
@@ -235,12 +235,12 @@ export const PLATFORM_ACCESS: PlatformAccessDefinition[] = [
     id: 'asistencias_deporte',
     name: 'Asistencias Deporte',
     area: 'deporte',
-    grantMode: 'area',
+    grantMode: 'manual',
     defaultRoles: { admin: 'ADMIN', monitor: 'MONITOR', superadmin: 'SUPER_ADMIN' },
     fields: [
       {
         kind: 'info',
-        message: 'Acceso automático si el área es Deporte o Multi-área.',
+        message: 'Asignación manual desde super admin.',
       },
     ],
   },
@@ -248,12 +248,12 @@ export const PLATFORM_ACCESS: PlatformAccessDefinition[] = [
     id: 'prestamos_escenarios',
     name: 'Préstamos Escenarios',
     area: 'deporte',
-    grantMode: 'area',
+    grantMode: 'manual',
     defaultRoles: { admin: 'admin', monitor: 'admin', superadmin: 'superadmin' },
     fields: [
       {
         kind: 'info',
-        message: 'Acceso automático si el área es Deporte o Multi-área.',
+        message: 'Asignación manual desde super admin.',
       },
     ],
   },
@@ -263,17 +263,11 @@ export const PLATFORM_BY_ID = Object.fromEntries(
   PLATFORM_ACCESS.map((p) => [p.id, p])
 ) as Record<PlatformId, PlatformAccessDefinition>
 
-export const MANUAL_PLATFORMS = PLATFORM_ACCESS.filter((p) => p.grantMode === 'manual')
-export const AREA_PLATFORMS = PLATFORM_ACCESS.filter((p) => p.grantMode === 'area')
+export const MANUAL_PLATFORMS = PLATFORM_ACCESS
 
 export function platformMatchesUserArea(platformArea: PlatformArea, userArea: UserArea): boolean {
   if (platformArea === 'both' || userArea === 'all') return true
   return platformArea === userArea
-}
-
-export function areaAutoPlatformsFor(userArea: UserArea): PlatformAccessDefinition[] {
-  if (userArea === 'all') return AREA_PLATFORMS
-  return AREA_PLATFORMS.filter((p) => p.area === userArea || p.area === 'both')
 }
 
 export function requiresCedula(platforms: string[]): boolean {
@@ -294,7 +288,7 @@ export function validatePlatformAccess(
   state: PlatformFormState
 ): string | null {
   if (state.platforms.length === 0) {
-    return 'Selecciona al menos una plataforma con asignación manual.'
+    return 'Selecciona al menos una plataforma.'
   }
 
   for (const id of state.platforms) {

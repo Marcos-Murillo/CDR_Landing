@@ -261,26 +261,7 @@ export default function MonitorPage() {
     )
   }
 
-  const ASISTENCIAS_IDS = ['asistencias_cultura', 'asistencias_deporte']
-  const availableModules = ALL_MODULES.filter((m) => {
-    if (ASISTENCIAS_IDS.includes(m.id)) {
-      if (user.area === 'all') return true
-      if (user.platforms.includes(m.id)) return true
-      return m.id === `asistencias_${user.area}`
-    }
-    if (m.id === 'prestamos_escenarios') {
-      return user.area === 'deporte' || user.area === 'all' || user.platforms.includes(m.id)
-    }
-    if (m.id === 'bitacoraac') {
-      return (
-        user.area === 'cultura' ||
-        user.area === 'deporte' ||
-        user.area === 'all' ||
-        user.platforms.includes(m.id)
-      )
-    }
-    return user.platforms.includes(m.id)
-  })
+  const availableModules = ALL_MODULES.filter((m) => user.platforms.includes(m.id))
   const areaLabel = user.area === 'cultura' ? 'Cultura' : user.area === 'deporte' ? 'Deporte' : 'Multi-área'
   const firstName = (user.displayName ?? 'Monitor').split(' ')[0]
   const initials = (user.displayName ?? 'M').split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()

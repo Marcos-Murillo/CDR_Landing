@@ -116,11 +116,14 @@ export default function DashboardPage() {
   const [fetching, setFetching] = useState(true)
   const [error, setError] = useState('')
 
-  const deporteView = user?.area === 'deporte'
+  const hasDeporte = user?.platforms.includes('asistencias_deporte') ?? false
+  const hasCultura = user?.platforms.includes('asistencias_cultura') ?? false
+  const deporteView = hasDeporte && !hasCultura
 
   const fetchData = useCallback(async () => {
     if (!auth.currentUser || !user) return
-    const deporte = user.area === 'deporte'
+    if (!hasDeporte && !hasCultura) return
+    const deporte = hasDeporte && !hasCultura
     setFetching(true); setError('')
     try {
       const idToken = await auth.currentUser.getIdToken()
@@ -134,14 +137,15 @@ export default function DashboardPage() {
       setData(await res.json())
     } catch { setError('No se pudieron cargar los datos.') }
     finally { setFetching(false) }
-  }, [user])
+  }, [user, hasDeporte, hasCultura])
 
-  useEffect(() => { if (user?.role === 'admin') fetchData() }, [user, fetchData])
+  useEffect(() => { if (user?.role === 'admin' && (hasDeporte || hasCultura)) fetchData() }, [user, fetchData, hasDeporte, hasCultura])
 
   useEffect(() => {
     if (!user) return
     if (user.role === 'superadmin') router.replace('/superadmin')
-  }, [user, router])
+    if (!hasDeporte && !hasCultura) router.replace('/dashboard/plataformas')
+  }, [user, router, hasDeporte, hasCultura])
 
   const handleOpenAsistencias = async () => {
     if (!user) return

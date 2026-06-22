@@ -94,13 +94,9 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 
   const roleLabel = { admin: 'Administrador', monitor: 'Monitor', superadmin: 'Super Admin' }[user.role] ?? user.role
 
-  // Dashboards que el usuario puede ver según sus plataformas/área
   const hasAsistencias =
-    user.area === 'all' ||
     user.platforms.includes('asistencias_cultura') ||
-    user.platforms.includes('asistencias_deporte') ||
-    user.area === 'cultura' ||
-    user.area === 'deporte'
+    user.platforms.includes('asistencias_deporte')
 
   const asistenciasHref = '/dashboard'
   const hasStockCultura = user.platforms.includes('stock_cultura')

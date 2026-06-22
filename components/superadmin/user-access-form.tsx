@@ -8,7 +8,6 @@ import {
   type StaffSede,
   type UserArea,
   MANUAL_PLATFORMS,
-  areaAutoPlatformsFor,
   platformMatchesUserArea,
   requiresCedula,
 } from '@/lib/platform-access-config'
@@ -66,7 +65,6 @@ export function UserAccessForm({ values, onChange, disabled }: UserAccessFormPro
   const { role, area, platforms, platformRoles, platformConfig, cedula, sede } = values
   const [expanded, setExpanded] = useState<string | null>(null)
 
-  const autoPlatforms = areaAutoPlatformsFor(area)
   const showCedula = requiresCedula(platforms)
 
   const togglePlatform = (id: string, available: boolean) => {
@@ -136,25 +134,7 @@ export function UserAccessForm({ values, onChange, disabled }: UserAccessFormPro
         </div>
       </section>
 
-      {/* Plataformas automáticas por área */}
-      {autoPlatforms.length > 0 && (
-        <section className={styles.formSection}>
-          <h3 className={styles.formSectionTitle}>Incluidas por área</h3>
-          <p className={styles.formSectionDesc}>
-            Se activan automáticamente según el área seleccionada. No requieren asignación manual.
-          </p>
-          <ul className={styles.autoPlatformList}>
-            {autoPlatforms.map((p) => (
-              <li key={p.id} className={styles.autoPlatformItem}>
-                <span className={styles.autoPlatformName}>{p.name}</span>
-                <span className={styles.autoPlatformBadge}>Automático</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {/* Asignación manual */}
+      {/* Asignación de plataformas */}
       <section className={styles.formSection}>
         <h3 className={styles.formSectionTitle}>Plataformas asignadas</h3>
         <p className={styles.formSectionDesc}>
