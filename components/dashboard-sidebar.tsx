@@ -107,7 +107,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
     hasAsistencias  && { href: asistenciasHref,              label: 'Asistencias',      icon: <ChartIcon />,    key: 'asistencias' },
     hasStockCultura && { href: '/dashboard/stock-cultura', label: 'Stock Cultura',    icon: <BoxIcon />,      key: 'stock-cultura' },
     hasStockCdu     && { href: '/dashboard/stock-cdu',     label: 'Stock CDU',        icon: <BoxIcon />,      key: 'stock-cdu' },
-    hasGymCdu       && { href: '/dashboard/gym-cdu',       label: 'GymControl CDU',   icon: <DumbbellIcon />, key: 'gym-cdu' },
+    hasGymCdu       && { href: '/dashboard/gym-cdu',       label: 'Control de Accesos CDU',   icon: <DumbbellIcon />, key: 'gym-cdu' },
   ].filter(Boolean) as { href: string; label: string; icon: React.ReactNode; key: string }[]
 
   return (

@@ -80,7 +80,7 @@ const PLATFORMS = [
   },
   {
     id: 'gym_cdu',
-    name: 'GymControl CDU',
+    name: 'Control de Accesos CDU',
     description: 'Registro y control de acceso a las instalaciones del gimnasio del Centro Deportivo.',
     area: 'deporte',
     tags: ['Gimnasio', 'Registro', 'Acceso'],

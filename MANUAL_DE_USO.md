@@ -10,7 +10,7 @@ El sistema CDR es un conjunto de plataformas digitales que trabajan juntas para 
 Las plataformas están organizadas en dos grandes áreas:
 
 - **Área de Cultura:** Bitácora AC, Bitácora COM, Stock Cultura, Horarios Cultura, Asistencias Cultura
-- **Área de Deporte (CDU):** GymControl CDU, Stock CDU, Horarios CDU, Asistencias Deporte
+- **Área de Deporte (CDU):** Control de Accesos CDU, Stock CDU, Horarios CDU, Asistencias Deporte
 
 ---
 
@@ -29,7 +29,7 @@ Tiene acceso limitado a las plataformas que le fueron asignadas. Ingresa por el 
 
 ### Usuarios con acceso directo (sin CDR Landing)
 Algunas plataformas tienen su propio sistema de ingreso independiente:
-- **GymControl CDU:** Los monitores, encargados y administradores del gimnasio ingresan directamente por la página de login de esa plataforma usando su número de cédula y contraseña.
+- **Control de Accesos CDU:** Los monitores, encargados y administradores del gimnasio ingresan directamente por la página de login de esa plataforma usando su número de cédula y contraseña.
 - **Asistencias (Cultura y Deporte):** Los monitores, entrenadores y directores pueden ingresar directamente por el login de Asistencias con su correo y contraseña, sin pasar por el CDR Landing.
 
 ---
@@ -108,7 +108,7 @@ Pueden ingresar directamente por la página de login de Asistencias con su corre
 
 ---
 
-## GymControl CDU — Control de acceso al gimnasio
+## Control de Accesos CDU — Control de acceso al gimnasio
 
 **¿Para qué sirve?**
 Registra y controla el acceso de personas a las instalaciones del Centro Deportivo: gimnasio, guardarropas y piscina.
@@ -116,7 +116,7 @@ Registra y controla el acceso de personas a las instalaciones del Centro Deporti
 **¿Cómo ingresan los usuarios?**
 Esta plataforma tiene su propio login independiente. Se ingresa con número de cédula y contraseña. No se usa correo electrónico.
 
-**Roles dentro de GymControl:**
+**Roles dentro de Control de Accesos CDU:**
 
 | Rol | Qué puede hacer |
 |-----|----------------|
@@ -143,7 +143,7 @@ Cuando un monitor inicia sesión, el sistema lo lleva automáticamente a la secc
 - Reportes de uso de instalaciones
 
 **¿Cómo se conecta con el CDR Landing?**
-Los administradores del CDR Landing pueden ver un resumen de las estadísticas del gimnasio directamente en su dashboard, sin necesidad de entrar a GymControl.
+Los administradores del CDR Landing pueden ver un resumen de las estadísticas del gimnasio directamente en su dashboard, sin necesidad de entrar a Control de Accesos CDU.
 
 ---
 
@@ -272,7 +272,7 @@ CDR Landing (centro de control)
     │
     ├── Asistencias ──────── Envía estadísticas de asistencia al dashboard
     │
-    ├── GymControl CDU ───── Envía estadísticas de accesos al dashboard
+    ├── Control de Accesos CDU ───── Envía estadísticas de accesos al dashboard
     │
     ├── Stock CDU ────────── Envía estado del inventario al dashboard
     │
@@ -289,7 +289,7 @@ CDR Landing (centro de control)
 
 **El inicio de sesión único (SSO)** es la tecnología que permite que al iniciar sesión en el CDR Landing, no sea necesario volver a ingresar usuario y contraseña en cada plataforma. Cuando se hace clic en una plataforma desde el CDR Landing, el sistema genera automáticamente un pase temporal que abre esa plataforma ya autenticado.
 
-**El dashboard central** del CDR Landing recoge datos de Asistencias, GymControl, Stock CDU y Stock Cultura para mostrar un resumen ejecutivo en tiempo real. Esto permite que un administrador o superadministrador tenga una visión completa de todo lo que está pasando en ambas áreas sin necesidad de entrar a cada plataforma por separado.
+**El dashboard central** del CDR Landing recoge datos de Asistencias, Control de Accesos CDU, Stock CDU y Stock Cultura para mostrar un resumen ejecutivo en tiempo real. Esto permite que un administrador o superadministrador tenga una visión completa de todo lo que está pasando en ambas áreas sin necesidad de entrar a cada plataforma por separado.
 
 ---
 
@@ -299,7 +299,7 @@ CDR Landing (centro de control)
 |------------|--------------|---------|---------|
 | CDR Landing | Login con correo | Login con correo | No aplica |
 | Asistencias | Desde CDR Landing o login directo | Login directo | No aplica |
-| GymControl CDU | Login con cédula | Login con cédula | No aplica |
+| Control de Accesos CDU | Login con cédula | Login con cédula | No aplica |
 | Stock CDU | Desde CDR Landing | Desde CDR Landing | No aplica |
 | Stock Cultura | Desde CDR Landing | Desde CDR Landing | No aplica |
 | Horarios CDU | Desde CDR Landing | Desde CDR Landing | Acceso libre |

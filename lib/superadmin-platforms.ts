@@ -11,7 +11,7 @@ export const SUPERADMIN_PLATFORMS = [
   { id: 'stock_cdu', name: 'Stock CDU', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_INVENTARIO_DEPORTE' },
   { id: 'stock_cdu_sanfer', name: 'Stock CDU San Fernando', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_STOCK_CDU_SANFER' },
   { id: 'horarios_cdu', name: 'Horarios CDU', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_HORARIOS_CDU' },
-  { id: 'gym_cdu', name: 'GymControl CDU', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_GYM_CDU' },
+  { id: 'gym_cdu', name: 'Control de Accesos CDU', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_GYM_CDU' },
   { id: 'asistencias_deporte', name: 'Asistencias', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_ASISTENCIAS' },
   { id: 'prestamos_escenarios', name: 'Préstamos Escenarios', area: 'Deporte', envKey: 'NEXT_PUBLIC_URL_PRESTAMOS_ESCENARIOS' },
 ].map((p) => ({

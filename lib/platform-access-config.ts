@@ -197,7 +197,7 @@ export const PLATFORM_ACCESS: PlatformAccessDefinition[] = [
   },
   {
     id: 'gym_cdu',
-    name: 'GymControl CDU',
+    name: 'Control de Accesos CDU',
     area: 'deporte',
     grantMode: 'manual',
     defaultRoles: { admin: 'admin', monitor: 'monitor', superadmin: 'admin' },
@@ -227,7 +227,7 @@ export const PLATFORM_ACCESS: PlatformAccessDefinition[] = [
       },
       {
         kind: 'info',
-        message: 'La cédula es necesaria para el SSO con GymControl.',
+        message: 'La cédula es necesaria para el SSO con Control de Accesos CDU.',
       },
     ],
   },
@@ -318,7 +318,7 @@ export function validatePlatformAccess(
   }
 
   if (requiresCedula(state.platforms) && !state.cedula.trim()) {
-    return 'La cédula es obligatoria para GymControl y/o Canal Comunicaciones.'
+    return 'La cédula es obligatoria para Control de Accesos CDU y/o Canal Comunicaciones.'
   }
 
   return null

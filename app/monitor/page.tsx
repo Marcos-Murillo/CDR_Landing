@@ -95,7 +95,7 @@ const ALL_MODULES = [
   },
   {
     id: 'gym_cdu',
-    name: 'GymControl CDU',
+    name: 'Control de Accesos CDU',
     description: 'Registro y control de acceso al gimnasio del Centro Deportivo.',
     area: 'deporte',
     url: process.env.NEXT_PUBLIC_URL_GYM_CDU ?? '#',

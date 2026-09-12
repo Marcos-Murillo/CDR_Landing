@@ -33,7 +33,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (stale) return NextResponse.json(stale)
 
     if (msg.includes('Missing GYM_CDU')) {
-      return NextResponse.json({ error: 'Admin SDK no configurado para GymControl CDU.' }, { status: 503 })
+      return NextResponse.json({ error: 'Admin SDK no configurado para Control de Accesos CDU.' }, { status: 503 })
     }
     if (msg.includes('RESOURCE_EXHAUSTED') || msg.includes('Quota')) {
       return NextResponse.json({ error: 'Cuota Firebase agotada. Los datos en caché no están disponibles.' }, { status: 503 })

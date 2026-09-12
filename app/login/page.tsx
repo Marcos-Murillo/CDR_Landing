@@ -92,7 +92,7 @@ const MODULES = [
     ),
   },
   {
-    name: 'GymControl CDU',
+    name: 'Control de Accesos CDU',
     tagline: 'Acceso y registro del gimnasio universitario',
     area: 'Deporte',
     icon: (
