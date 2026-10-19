@@ -1,8 +1,8 @@
 # Informe profesional de cambios - Ecosistema CDR Landing
 
-**Periodo revisado:** 2026-10-12 14:01 UTC a 2026-10-19 14:01 UTC  
-**Fecha de elaboracion:** 2026-10-19  
-**Fuente tecnica:** historial `origin/main` de los repositorios relacionados con CDR Landing  
+**Periodo revisado:** 2026-10-12 14:01 UTC a 2026-10-19 14:01 UTC
+**Fecha de elaboracion:** 2026-10-19
+**Fuente tecnica:** historial `origin/main` de los repositorios relacionados con CDR Landing
 **Alcance:** CDR Landing, plataformas formales configuradas en `lib/platform-access-config.ts` y repositorios relacionados presentes en el workspace.
 
 ## 1. Resumen ejecutivo
@@ -120,4 +120,3 @@ Los cambios se concentraron en dos frentes:
 La semana tuvo un foco claro en **fortalecer Asistencias Deporte** con capacidades de torneos por equipos y en **mejorar la calidad de los indicadores de participacion**. Aunque solo un repositorio tuvo actividad, el impacto funcional es relevante porque amplifica el autoservicio de participantes, delegados y administradores.
 
 La recomendacion principal es acompañar estos cambios con pruebas, validacion de permisos sobre exportaciones y revision de indices/reglas de Firestore antes de escalar el uso de torneos a eventos masivos.
-
